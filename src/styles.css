@@ -1,0 +1,300 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-midnight: var(--midnight);
+  --color-navy: var(--navy);
+  --color-charcoal: var(--charcoal);
+  --color-ivory: var(--ivory);
+  --color-gold: var(--gold);
+  --color-grey: var(--grey);
+  --color-coral: var(--coral);
+  --color-whatsapp: var(--whatsapp);
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --shadow-deep: var(--shadow-deep);
+}
+
+:root {
+  --radius: 0.375rem;
+  /* Scale Flow palette */
+  --midnight: oklch(0.235 0.016 258);
+  --navy: oklch(0.285 0.017 255);
+  --charcoal: oklch(0.335 0.018 255);
+  --ivory: oklch(0.962 0.009 85);
+  --gold: oklch(0.76 0.08 74);
+  --grey: oklch(0.71 0.02 250);
+  --coral: oklch(0.7 0.14 30);
+
+  --background: var(--midnight);
+  --foreground: var(--ivory);
+  --card: var(--navy);
+  --card-foreground: var(--ivory);
+  --popover: var(--navy);
+  --popover-foreground: var(--ivory);
+  --primary: var(--gold);
+  --primary-foreground: var(--midnight);
+  --secondary: var(--charcoal);
+  --secondary-foreground: var(--ivory);
+  --muted: var(--charcoal);
+  --muted-foreground: var(--grey);
+  --accent: var(--charcoal);
+  --accent-foreground: var(--ivory);
+  --destructive: var(--coral);
+  --destructive-foreground: var(--midnight);
+  --border: oklch(0.96 0.01 85 / 12%);
+  --input: oklch(0.96 0.01 85 / 16%);
+  --ring: var(--gold);
+  --chart-1: var(--gold);
+  --chart-2: var(--coral);
+  --chart-3: var(--grey);
+  --chart-4: var(--ivory);
+  --chart-5: var(--navy);
+  --sidebar: var(--midnight);
+  --sidebar-foreground: var(--ivory);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: var(--midnight);
+  --sidebar-accent: var(--charcoal);
+  --sidebar-accent-foreground: var(--ivory);
+  --sidebar-border: oklch(0.96 0.01 85 / 10%);
+  --sidebar-ring: var(--gold);
+  --whatsapp: oklch(0.72 0.17 150);
+  --shadow-deep: 0 40px 80px -30px oklch(0 0 0 / 70%);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+@layer base {
+  html { scroll-behavior: auto; overflow-x: clip; }
+  body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  ::selection { background: var(--gold); color: var(--midnight); }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+}
+
+@utility font-display { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.045em; line-height: 1; text-wrap: balance; }
+@utility label-mono { font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; }
+@utility link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px; background-repeat: no-repeat; background-position: 100% 100%;
+  transition: background-size 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  &:hover { background-size: 100% 1px; background-position: 0% 100%; }
+}
+@utility grain {
+  position: relative;
+  &::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}
+@utility safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+@keyframes scroll-cue { 0% { transform: translateY(-100%); } 100% { transform: translateY(220%); } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* Light editorial surface: flips the palette tokens so every existing utility (text-ivory, bg-midnight, btnPrimary…) reads correctly on ivory. */
+@utility surface-light {
+  --ivory: oklch(0.2 0.01 260);
+  --midnight: oklch(0.962 0.009 85);
+  --navy: oklch(0.928 0.011 80);
+  --charcoal: oklch(0.873 0.013 75);
+  --gold: oklch(0.58 0.085 68);
+  --grey: oklch(0.46 0.02 255);
+  --background: var(--midnight);
+  --foreground: var(--ivory);
+  --card: oklch(0.985 0.008 85);
+  --card-foreground: var(--ivory);
+  --border: oklch(0.17 0.015 265 / 12%);
+  --input: oklch(0.17 0.015 265 / 18%);
+  --muted-foreground: var(--grey);
+  --primary: var(--gold);
+  --shadow-deep: 0 40px 80px -40px oklch(0.2 0.03 260 / 35%);
+  background-color: var(--midnight);
+  color: var(--ivory);
+}
+/* Dark surface that also works when nested inside a light one. */
+@utility surface-dark {
+  --midnight: oklch(0.235 0.016 258);
+  --navy: oklch(0.285 0.017 255);
+  --charcoal: oklch(0.335 0.018 255);
+  --ivory: oklch(0.962 0.009 85);
+  --gold: oklch(0.76 0.08 74);
+  --grey: oklch(0.71 0.02 250);
+  --background: var(--midnight);
+  --foreground: var(--ivory);
+  --card: var(--navy);
+  --card-foreground: var(--ivory);
+  --border: oklch(0.96 0.01 85 / 12%);
+  --input: oklch(0.96 0.01 85 / 16%);
+  --primary: var(--gold);
+  --shadow-deep: 0 40px 80px -30px oklch(0 0 0 / 70%);
+  background-color: var(--midnight);
+  color: var(--ivory);
+}
+@utility section-pad { padding: clamp(6rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem); }
+@utility text-outline { color: transparent; -webkit-text-stroke: 1px currentColor; }
+@keyframes marquee-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* Soft cream band between ivory and graphite. */
+@utility surface-cream {
+  @apply surface-light;
+  --midnight: oklch(0.928 0.011 80);
+  --navy: oklch(0.895 0.012 78);
+  --card: oklch(0.955 0.009 82);
+  background-color: var(--midnight);
+}
+/* Graphite stage with a faint top light, used on the Work page. */
+@utility stage-graphite {
+  background:
+    radial-gradient(80% 50% at 50% 0%, oklch(0.36 0.02 255 / 70%), transparent 70%),
+    linear-gradient(var(--midnight), var(--navy));
+}
+@keyframes btn-sheen { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(220%) skewX(-20deg); } }
+
+/* ── Button interaction system (V5). Fixed in place: no magnetic or cursor-following movement. ── */
+@layer components {
+  .btn {
+    --btn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative; isolation: isolate; overflow: hidden;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
+    border-radius: 9999px; font-weight: 600; letter-spacing: -0.01em; min-height: 44px;
+    -webkit-tap-highlight-color: transparent; user-select: none;
+    transition: color 380ms var(--btn-ease), border-color 380ms var(--btn-ease), background-color 380ms var(--btn-ease), box-shadow 380ms var(--btn-ease), transform 140ms var(--btn-ease);
+  }
+  .btn::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+    transform: scaleX(0); transform-origin: right center; transition: transform 420ms var(--btn-ease);
+  }
+  .btn > svg { flex-shrink: 0; transition: transform 260ms var(--btn-ease); }
+  .btn:active:not(:disabled) { transform: scale(0.98); transition-duration: 110ms; }
+  .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .btn:disabled { cursor: not-allowed; }
+
+  .btn-md { padding: 0.875rem 1.5rem; font-size: 0.875rem; }
+  .btn-lg { padding: 1.25rem 2.25rem; font-size: 1rem; }
+  @media (min-width: 768px) { .btn-lg { padding: 1.5rem 2.5rem; font-size: 1.125rem; } }
+
+  /* A — Primary reveal: accent wipes in left→right, text contrast follows. */
+  .btn-primary { background-color: var(--ivory); color: var(--midnight); }
+  .btn-primary::before { background-color: var(--gold); }
+  .btn-primary:active:not(:disabled) { box-shadow: 0 6px 16px -10px oklch(0 0 0 / 45%); }
+
+  /* E — Outline: accent border + soft fill. */
+  .btn-outline { border: 1px solid color-mix(in oklab, var(--ivory) 28%, transparent); color: var(--ivory); }
+  .btn-outline::before { background-color: color-mix(in oklab, var(--gold) 12%, transparent); }
+
+  /* WhatsApp CTA */
+  .btn-whatsapp { border: 1px solid color-mix(in oklab, var(--ivory) 28%, transparent); color: var(--ivory); }
+  .btn-whatsapp::before { background-color: var(--whatsapp); }
+
+  /* Restrained highlight pass for the signature button. */
+  .btn-sheen::after {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 35%; pointer-events: none;
+    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 22%), transparent);
+    transform: translateX(-160%) skewX(-20deg); opacity: 0;
+  }
+
+  /* B — Sliding label: masked, never both visible, size fixed by the first copy. */
+  .btn-label { position: relative; display: inline-block; overflow: hidden; line-height: 1.25; }
+  .btn-label > span { display: block; transition: transform 420ms var(--btn-ease, ease); }
+  .btn-label > span + span { position: absolute; inset: 0; transform: translateY(105%); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover:not(:disabled)::before { transform: scaleX(1); transform-origin: left center; }
+    .btn-primary:hover:not(:disabled) { color: var(--midnight); box-shadow: 0 18px 40px -22px color-mix(in oklab, var(--gold) 80%, transparent); }
+    .btn-outline:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+    .btn-whatsapp:hover:not(:disabled) { border-color: var(--whatsapp); color: oklch(0.2 0.02 160); }
+    .btn:hover:not(:disabled) > svg:last-child:not(:first-child) { transform: translateX(7px); }
+    .btn:hover:not(:disabled) > svg.lucide-arrow-up-right:last-child { transform: translate(4px, -4px); }
+    .btn:hover:not(:disabled) > svg.lucide-arrow-left:first-child { transform: translateX(-7px); }
+    .btn-whatsapp:hover > svg:first-child { transform: rotate(-8deg) scale(1.08); }
+    .btn:hover .btn-label > span:first-child { transform: translateY(-105%); }
+    .btn:hover .btn-label > span + span { transform: translateY(0); }
+    .btn-sheen:hover::after { animation: btn-sheen 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s; opacity: 1; }
+  }
+  /* Keyboard users get the same reveal on focus. */
+  .btn:focus-visible::before { transform: scaleX(1); transform-origin: left center; }
+  .btn-outline:focus-visible { border-color: var(--gold); }
+  .btn:focus-visible .btn-label > span:first-child { transform: translateY(-105%); }
+  .btn:focus-visible .btn-label > span + span { transform: translateY(0); }
+
+  /* Selectable cards in the quote builder. */
+  .select-card { transition: border-color 300ms ease, background-color 300ms ease, box-shadow 300ms ease, transform 120ms ease; }
+  .select-card:active { transform: scale(0.99); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn::before, .btn > svg, .btn-label > span { transition: none !important; }
+  .btn-sheen::after { display: none; }
+  .btn:active { transform: none !important; }
+}
+/* Contrast fix: on light/cream sections the gold fill is deepened so the light label stays readable (≥4.5:1). */
+.surface-light .btn-primary::before, .surface-cream .btn-primary::before { background-color: color-mix(in oklab, var(--gold) 80%, var(--ivory)); }
