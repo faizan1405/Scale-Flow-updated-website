@@ -148,6 +148,17 @@ function load() {
         if (backup("before recovering earlier admin edits")) persist();
       }
     }
+    if (envelope && !envelope.data.categories.some((c) => c.slug === "descriptive" || c.id === "c-descriptive")) {
+      const maxOrder = Math.max(0, ...envelope.data.categories.map((c) => c.order || 0));
+      envelope.data.categories.push({
+        id: "c-descriptive",
+        name: "Descriptive",
+        slug: "descriptive",
+        enabled: true,
+        order: maxOrder + 1,
+      });
+      persist();
+    }
     state = envelope.data;
   } catch {
     /* corrupted storage — show defaults, leave stored data untouched */

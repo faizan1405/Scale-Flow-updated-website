@@ -73,8 +73,24 @@ function Detail({ project: p, next, category }: { project: Project; next?: Proje
       <section className="relative overflow-hidden px-6 pb-20 pt-36 md:px-12 md:pt-44">
         <div aria-hidden className="absolute -top-40 left-1/2 h-[60vh] w-[80vw] -translate-x-1/2 rounded-full opacity-25 blur-[120px]" style={{ background: p.palette.accent }} />
         <div className="relative mx-auto max-w-7xl">
-          <Link to="/work" className="label-mono inline-flex items-center gap-2 text-grey hover:text-ivory"><ArrowLeft className="h-3.5 w-3.5" /> All work</Link>
-          <p data-reveal className="label-mono mt-10 text-gold">{category}{kindLabel(p) && ` · ${kindLabel(p)}`}</p>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Link to="/work" className="label-mono inline-flex items-center gap-2 text-grey hover:text-ivory transition-colors">
+              <ArrowLeft className="h-3.5 w-3.5" /> All work
+            </Link>
+            {p.liveUrl && (
+              <a
+                href={p.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(btnPrimary, "btn-sheen shadow-deep group inline-flex items-center gap-2 text-xs md:text-sm py-2 px-4 md:py-2.5 md:px-5")}
+                aria-label={`View ${p.title} live website in a new tab`}
+              >
+                <SlideLabel>View Website</SlideLabel>
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            )}
+          </div>
+          <p data-reveal className="label-mono mt-8 text-gold">{category}{kindLabel(p) && ` · ${kindLabel(p)}`}</p>
           <Words as="h1" text={p.title} italicLast className="font-display mt-4 block text-[clamp(3.5rem,11vw,10rem)] leading-[0.88]" />
           <p data-reveal className="mt-6 max-w-xl text-lg text-ivory/70">{p.summary}</p>
           <div data-reveal="scale" className="mt-16 overflow-hidden rounded-lg shadow-deep">

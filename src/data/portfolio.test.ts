@@ -36,4 +36,24 @@ describe("imported portfolio", () => {
   it("search matches by name", () => {
     expect(portfolio.filter((p) => matchesQuery(p, "velora")).map((p) => p.slug)).toEqual(["velora-serum"]);
   });
+  it("includes the Descriptive category with exact name and slug", () => {
+    const desc = seed.categories.find((c) => c.slug === "descriptive");
+    expect(desc).toBeDefined();
+    expect(desc?.name).toBe("Descriptive");
+    expect(desc?.id).toBe("c-descriptive");
+    expect(desc?.enabled).toBe(true);
+  });
+  it("does not automatically assign projects to Descriptive", () => {
+    expect(portfolio.filter((p) => inCategory(p, "c-descriptive"))).toHaveLength(0);
+  });
+  it("allows a project to belong to an industry category and Descriptive simultaneously", () => {
+    const bmw = portfolio.find((p) => p.slug === "bmw-interactive-experience")!;
+    const markedBmw = {
+      ...bmw,
+      extraCategoryIds: [...(bmw.extraCategoryIds ?? []), "c-descriptive"],
+    };
+    expect(inCategory(markedBmw, "c-3d")).toBe(true);
+    expect(inCategory(markedBmw, "c-descriptive")).toBe(true);
+    expect(inCategory(markedBmw, "c-travel")).toBe(false);
+  });
 });

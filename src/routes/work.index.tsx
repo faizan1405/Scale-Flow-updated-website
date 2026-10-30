@@ -118,7 +118,16 @@ function Work() {
               const cat = db.categories.find((c) => c.id === p.categoryId);
               const kind = kindLabel(p);
               return (
-                <Link key={p.id} data-item to="/work/$slug" params={{ slug: p.slug }} className={cn("group block", SPANS[i % SPANS.length])}>
+                <article
+                  key={p.id}
+                  data-item
+                  onClick={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.closest("a, button")) return;
+                    navigate({ to: "/work/$slug", params: { slug: p.slug } });
+                  }}
+                  className={cn("group block cursor-pointer select-none", SPANS[i % SPANS.length])}
+                >
                   <div className="relative">
                     <div aria-hidden className="absolute -inset-4 -z-0 rounded-[24px] opacity-0 blur-[50px] transition-opacity duration-700 group-hover:opacity-40" style={{ background: p.ambient ?? p.palette.accent }} />
                     <div className="relative rounded-xl ring-1 ring-ivory/10 shadow-deep">
@@ -130,14 +139,38 @@ function Work() {
                   <div className="mt-5 flex items-start justify-between gap-4">
                     <div>
                       <p className="label-mono text-gold">{String(i + 1).padStart(2, "0")} — {cat?.name}{kind && <span className="text-grey"> · {kind}</span>}</p>
-                      <h2 className="font-display mt-2 text-3xl md:text-4xl">{p.title}</h2>
+                      <h2 className="font-display mt-2 text-3xl md:text-4xl">
+                        <Link
+                          to="/work/$slug"
+                          params={{ slug: p.slug }}
+                          className="transition-colors hover:text-gold focus:outline-none focus-visible:underline"
+                        >
+                          {p.title}
+                        </Link>
+                      </h2>
                       <p className="mt-1 text-sm text-ivory/70">{p.summary}</p>
                     </div>
-                    <span className="mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ivory/20 transition-all duration-500 group-hover:rotate-45 group-hover:border-gold group-hover:bg-gold group-hover:text-midnight">
-                      <ArrowUpRight className="h-4 w-4" />
-                    </span>
+                    {p.liveUrl ? (
+                      <a
+                        href={p.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        aria-label={`Open live website for ${p.title} in a new tab`}
+                        title={`Visit live website: ${p.liveUrl}`}
+                        className="relative z-10 mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ivory/20 transition-all duration-500 hover:scale-110 hover:border-gold hover:bg-gold hover:text-midnight group-hover:rotate-45 group-hover:border-gold group-hover:bg-gold group-hover:text-midnight focus:outline-none focus-visible:ring-2 focus-visible:ring-gold cursor-pointer"
+                      >
+                        <ArrowUpRight className="h-4 w-4" />
+                      </a>
+                    ) : (
+                      <span className="mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ivory/20 transition-all duration-500 group-hover:rotate-45 group-hover:border-gold group-hover:bg-gold group-hover:text-midnight">
+                        <ArrowUpRight className="h-4 w-4" />
+                      </span>
+                    )}
                   </div>
-                </Link>
+                </article>
               );
             })}
           </div>

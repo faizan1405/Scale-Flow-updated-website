@@ -14,6 +14,7 @@ export const seed: DB = {
     { id: "c-realestate", name: "Real Estate & Interiors", slug: "real-estate-interiors", enabled: true, order: 6 },
     { id: "c-creative", name: "Creative", slug: "creative", enabled: true, order: 7 },
     { id: "c-catalogue", name: "Product Catalogue", slug: "catalogue", enabled: true, order: 8 },
+    { id: "c-descriptive", name: "Descriptive", slug: "descriptive", enabled: true, order: 9 },
   ],
   projects: portfolio,
   // Walkthrough videos have not been supplied yet; these placeholder cards say "Video not uploaded".

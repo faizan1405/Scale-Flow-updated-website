@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Pencil, Plus, Star, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { byOrder, moveItem, uid, update, useDB } from "@/data/store";
+import { inCategory } from "@/data/portfolio-utils";
 import type { MockLayout, Project, ProjectKind } from "@/data/types";
 import { aBtn, aBtnGhost, AField, aInput, OrderButtons, PageHead, slugify, Toggle, UploadButton } from "@/components/admin/kit";
 import { SiteMock } from "@/components/site/SiteMock";
@@ -21,25 +22,51 @@ function Projects() {
   const [editing, setEditing] = useState<Project | null>(null);
   const list = [...db.projects].sort(byOrder);
   const patch = (id: string, p: Partial<Project>) => update((d) => ({ ...d, projects: d.projects.map((x) => (x.id === id ? { ...x, ...p, updatedAt: new Date().toISOString() } : x)) }));
+  const descCat = db.categories.find((c) => c.slug === "descriptive" || c.id === "c-descriptive");
+  const descId = descCat?.id ?? "c-descriptive";
 
   return (
     <>
-      <PageHead title="Projects" desc="Set each project's type (Client work, Concept or Demo) once confirmed. Unconfirmed projects show no type label to visitors." action={<button className={aBtn} onClick={() => setEditing(blank(db.projects.length + 1, db.categories[0]?.id ?? ""))}><Plus className="h-4 w-4" /> New project</button>} />
+      <PageHead title="Projects" desc="Set each project's type (Client work, Concept or Demo) once confirmed. Unconfirmed projects show no type label to visitors." action={<button className={aBtn} onClick={() => setEditing(blank(db.projects.length + 1, db.categories.find((c) => c.slug !== "descriptive")?.id ?? db.categories[0]?.id ?? "")) }><Plus className="h-4 w-4" /> New project</button>} />
       <ul className="space-y-2">
-        {list.map((p, i) => (
-          <li key={p.id} className="flex flex-wrap items-center gap-4 rounded-lg border border-ivory/10 p-3">
-            <OrderButtons first={i === 0} last={i === list.length - 1} onMove={(dir) => update((d) => ({ ...d, projects: moveItem(d.projects, p.id, dir) }))} />
-            <div className="w-24 overflow-hidden rounded"><SiteMock project={p} chrome={false} /></div>
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold">{p.title || "Untitled"} {p.sample && <span className="ml-2 rounded-full border border-coral/40 px-2 py-0.5 text-[10px] text-coral">Sample</span>}</p>
-              <p className="text-xs text-grey">/work/{p.slug} · {db.categories.find((c) => c.id === p.categoryId)?.name ?? "No category"} · {p.kind && p.kind !== "unverified" ? p.kind : "type not confirmed"}</p>
-            </div>
-            <label className="flex items-center gap-2 text-xs">Published <Toggle label="Published" checked={p.published} onChange={(v) => patch(p.id, { published: v })} /></label>
-            <button onClick={() => patch(p.id, { featured: !p.featured })} aria-pressed={p.featured} className={cn("flex items-center gap-1 text-xs", p.featured ? "text-gold" : "text-grey")}><Star className={cn("h-4 w-4", p.featured && "fill-current")} /> Featured</button>
-            <button onClick={() => setEditing(p)} className={aBtnGhost}><Pencil className="h-4 w-4" /> Edit</button>
-            <button onClick={() => confirm(`Delete “${p.title}”? This cannot be undone.`) && update((d) => ({ ...d, projects: d.projects.filter((x) => x.id !== p.id) }))} className="rounded p-2 text-coral hover:bg-charcoal" aria-label={`Delete ${p.title}`}><Trash2 className="h-4 w-4" /></button>
-          </li>
-        ))}
+        {list.map((p, i) => {
+          const isDesc = inCategory(p, descId);
+          return (
+            <li key={p.id} className="flex flex-wrap items-center gap-4 rounded-lg border border-ivory/10 p-3">
+              <OrderButtons first={i === 0} last={i === list.length - 1} onMove={(dir) => update((d) => ({ ...d, projects: moveItem(d.projects, p.id, dir) }))} />
+              <div className="w-24 overflow-hidden rounded"><SiteMock project={p} chrome={false} /></div>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold">{p.title || "Untitled"} {p.sample && <span className="ml-2 rounded-full border border-coral/40 px-2 py-0.5 text-[10px] text-coral">Sample</span>}</p>
+                <p className="text-xs text-grey">/work/{p.slug} · {db.categories.find((c) => c.id === p.categoryId)?.name ?? "No category"} · {p.kind && p.kind !== "unverified" ? p.kind : "type not confirmed"}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const nextExtras = isDesc
+                    ? (p.extraCategoryIds ?? []).filter((id) => id !== descId)
+                    : Array.from(new Set([...(p.extraCategoryIds ?? []), descId]));
+                  patch(p.id, { extraCategoryIds: nextExtras });
+                  toast.success(isDesc ? `Removed “${p.title}” from Descriptive` : `Added “${p.title}” to Descriptive`);
+                }}
+                aria-pressed={isDesc}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors cursor-pointer",
+                  isDesc
+                    ? "border-gold bg-gold/15 text-gold font-medium"
+                    : "border-ivory/15 text-grey hover:border-ivory/30 hover:text-ivory"
+                )}
+                title={isDesc ? "Included in Descriptive category (click to remove)" : "Click to add to Descriptive category"}
+              >
+                <span className={cn("h-1.5 w-1.5 rounded-full", isDesc ? "bg-gold" : "bg-grey/40")} />
+                Descriptive
+              </button>
+              <label className="flex items-center gap-2 text-xs">Published <Toggle label="Published" checked={p.published} onChange={(v) => patch(p.id, { published: v })} /></label>
+              <button onClick={() => patch(p.id, { featured: !p.featured })} aria-pressed={p.featured} className={cn("flex items-center gap-1 text-xs", p.featured ? "text-gold" : "text-grey")}><Star className={cn("h-4 w-4", p.featured && "fill-current")} /> Featured</button>
+              <button onClick={() => setEditing(p)} className={aBtnGhost}><Pencil className="h-4 w-4" /> Edit</button>
+              <button onClick={() => confirm(`Delete “${p.title}”? This cannot be undone.`) && update((d) => ({ ...d, projects: d.projects.filter((x) => x.id !== p.id) }))} className="rounded p-2 text-coral hover:bg-charcoal" aria-label={`Delete ${p.title}`}><Trash2 className="h-4 w-4" /></button>
+            </li>
+          );
+        })}
       </ul>
       {editing && <Editor initial={editing} onClose={() => setEditing(null)} />}
     </>
@@ -50,6 +77,9 @@ function Editor({ initial, onClose }: { initial: Project; onClose: () => void })
   const db = useDB();
   const [p, setP] = useState<Project>(initial);
   const isNew = !db.projects.some((x) => x.id === p.id);
+  const descCat = db.categories.find((c) => c.slug === "descriptive" || c.name === "Descriptive");
+  const descId = descCat?.id ?? "c-descriptive";
+  const isDesc = (p.extraCategoryIds ?? []).includes(descId) || p.categoryId === descId;
   const t = (k: keyof Project) => ({ value: (p[k] as string) ?? "", onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setP({ ...p, [k]: e.target.value }) });
   const list = (k: "capabilities" | "deliverables" | "tags") => ({ value: p[k].join(", "), onChange: (e: React.ChangeEvent<HTMLInputElement>) => setP({ ...p, [k]: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) }) });
 
@@ -88,7 +118,32 @@ function Editor({ initial, onClose }: { initial: Project; onClose: () => void })
           <AField label="Slug" hint={`/work/${slugify(p.slug || p.title)}`}><input className={aInput} {...t("slug")} /></AField>
           <AField label="Client"><input className={aInput} {...t("client")} /></AField>
           <AField label="Category">
-            <select className={aInput} {...t("categoryId")}>{db.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
+            <select className={aInput} {...t("categoryId")}>
+              {db.categories
+                .filter((c) => c.slug !== "descriptive" && c.id !== "c-descriptive")
+                .map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+            </select>
+          </AField>
+          <AField label="Descriptive Category" hint="Highlight this project under the public “Descriptive” filter.">
+            <label className="flex items-center gap-3 cursor-pointer py-1">
+              <Toggle
+                label="In Descriptive category"
+                checked={isDesc}
+                onChange={(v) => {
+                  setP({
+                    ...p,
+                    extraCategoryIds: v
+                      ? Array.from(new Set([...(p.extraCategoryIds ?? []), descId]))
+                      : (p.extraCategoryIds ?? []).filter((id) => id !== descId),
+                  });
+                }}
+              />
+              <span className="text-xs text-ivory/80 font-medium">
+                {isDesc ? "Included in Descriptive filter" : "Not in Descriptive filter"}
+              </span>
+            </label>
           </AField>
           <AField label="Project type" hint="Only choose Client work when it is confirmed.">
             <select className={aInput} value={p.kind ?? "unverified"} onChange={(e) => setP({ ...p, kind: e.target.value as ProjectKind })}>
@@ -100,14 +155,16 @@ function Editor({ initial, onClose }: { initial: Project; onClose: () => void })
           </AField>
           <AField label="Also show under">
             <div className="flex flex-wrap gap-2">
-              {db.categories.filter((c) => c.id !== p.categoryId).map((c) => {
-                const on = (p.extraCategoryIds ?? []).includes(c.id);
-                return (
-                  <button key={c.id} type="button" aria-pressed={on} onClick={() => setP({ ...p, extraCategoryIds: on ? (p.extraCategoryIds ?? []).filter((x) => x !== c.id) : [...(p.extraCategoryIds ?? []), c.id] })} className={cn("rounded-full border px-3 py-1 text-xs", on ? "border-gold text-gold" : "border-ivory/15 text-grey")}>
-                    {c.name}
-                  </button>
-                );
-              })}
+              {db.categories
+                .filter((c) => c.id !== p.categoryId && c.slug !== "descriptive" && c.id !== "c-descriptive")
+                .map((c) => {
+                  const on = (p.extraCategoryIds ?? []).includes(c.id);
+                  return (
+                    <button key={c.id} type="button" aria-pressed={on} onClick={() => setP({ ...p, extraCategoryIds: on ? (p.extraCategoryIds ?? []).filter((x) => x !== c.id) : [...(p.extraCategoryIds ?? []), c.id] })} className={cn("rounded-full border px-3 py-1 text-xs", on ? "border-gold text-gold" : "border-ivory/15 text-grey")}>
+                      {c.name}
+                    </button>
+                  );
+                })}
             </div>
           </AField>
           <AField label="Short summary" className="md:col-span-2"><input className={aInput} {...t("summary")} /></AField>
