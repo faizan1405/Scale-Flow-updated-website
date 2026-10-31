@@ -4,16 +4,17 @@ import { seed } from "./seed";
 import { inCategory, matchesQuery } from "./portfolio-utils";
 
 describe("imported portfolio", () => {
-  it("has exactly 26 unique projects", () => {
-    expect(portfolio).toHaveLength(26);
-    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(26);
-    expect(new Set(portfolio.map((p) => p.liveUrl)).size).toBe(26);
+  it("has exactly 27 unique projects", () => {
+    expect(portfolio).toHaveLength(27);
+    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(27);
+    expect(new Set(portfolio.map((p) => p.liveUrl)).size).toBe(27);
   });
   it("keeps the supplied live URLs", () => {
     const url = (s: string) => portfolio.find((p) => p.slug === s)?.liveUrl;
     expect(url("bmw-interactive-experience")).toBe("https://bmw.joinscaleflow.in/");
     expect(url("a-and-i-realty")).toBe("https://aireality.joinscaleflow.in/");
     expect(url("afforda-technologies")).toBe("https://affordaindia.com/");
+    expect(url("jsb-stonex-marble")).toBe("https://marble.joinscaleflow.in/");
   });
   it("features the six chosen projects", () => {
     expect(portfolio.filter((p) => p.featured).map((p) => p.title)).toEqual([
@@ -93,5 +94,17 @@ describe("imported portfolio", () => {
     expect(inCategory(markedBmw, "c-3d")).toBe(true);
     expect(inCategory(markedBmw, "c-descriptive")).toBe(true);
     expect(inCategory(markedBmw, "c-travel")).toBe(false);
+  });
+
+  it("includes JSB Stonex 3D scroll-based experience in 3D Interactive category", () => {
+    const marble = portfolio.find((p) => p.slug === "jsb-stonex-marble");
+    expect(marble).toBeDefined();
+    expect(marble?.categoryId).toBe("c-3d");
+    expect(marble?.extraCategoryIds).toContain("c-realestate");
+    expect(marble?.liveUrl).toBe("https://marble.joinscaleflow.in/");
+    expect(marble?.tags).toContain("3D");
+    expect(marble?.tags).toContain("Scroll-based");
+    expect(inCategory(marble!, "c-3d")).toBe(true);
+    expect(inCategory(marble!, "c-realestate")).toBe(true);
   });
 });

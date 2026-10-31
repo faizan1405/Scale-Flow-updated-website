@@ -7,9 +7,9 @@ import { inCategory, matchesQuery } from "@/data/portfolio-utils";
 import type { Project } from "@/data/types";
 
 describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
-  it("maintains all 26 projects intact with valid live URLs", () => {
-    expect(portfolio).toHaveLength(26);
-    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(26);
+  it("maintains all portfolio projects intact with valid live URLs", () => {
+    expect(portfolio).toHaveLength(27);
+    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(27);
     expect(portfolio.every((p) => p.liveUrl && p.liveUrl.startsWith("https://"))).toBe(true);
   });
 
