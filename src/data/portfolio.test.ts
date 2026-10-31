@@ -43,29 +43,46 @@ describe("imported portfolio", () => {
     expect(desc?.id).toBe("c-descriptive");
     expect(desc?.enabled).toBe(true);
   });
-  it("assigns all .com domain projects to Descriptive while preserving original categories", () => {
+  it("assigns selected projects (including .com, Black Pearl, Teenntees, Silver Circle, and eZyMiles) to Descriptive", () => {
     const descId = "c-descriptive";
-    const comProjects = portfolio.filter((p) => (p.liveUrl ?? "").includes(".com"));
-    expect(comProjects).toHaveLength(3);
-    expect(comProjects.every((p) => inCategory(p, descId))).toBe(true);
+    const targetSlugs = [
+      "afforda-technologies",
+      "mainika",
+      "yaarl-styles",
+      "silver-circle-travel",
+      "ezymiles",
+      "black-pearl-apparels",
+      "teen-and-tees",
+    ];
 
-    // Afforda keeps c-catalogue + c-business while having c-descriptive
-    const afforda = portfolio.find((p) => p.slug === "afforda-technologies")!;
-    expect(afforda.categoryId).toBe("c-catalogue");
-    expect(afforda.extraCategoryIds).toContain("c-business");
-    expect(afforda.extraCategoryIds).toContain("c-descriptive");
+    for (const slug of targetSlugs) {
+      const p = portfolio.find((item) => item.slug === slug);
+      expect(p, `Project with slug ${slug} should exist`).toBeDefined();
+      expect(inCategory(p!, descId), `Project ${slug} should be in Descriptive`).toBe(true);
+    }
 
-    // Mainika keeps c-fashion + c-ecommerce while having c-descriptive
-    const mainika = portfolio.find((p) => p.slug === "mainika")!;
-    expect(mainika.categoryId).toBe("c-fashion");
-    expect(mainika.extraCategoryIds).toContain("c-ecommerce");
-    expect(mainika.extraCategoryIds).toContain("c-descriptive");
+    // Silver Circle Travel has the updated domain
+    const silverCircle = portfolio.find((p) => p.slug === "silver-circle-travel")!;
+    expect(silverCircle.liveUrl).toBe("https://silvercircletravel.com/");
+    expect(silverCircle.categoryId).toBe("c-travel");
+    expect(silverCircle.extraCategoryIds).toContain("c-descriptive");
 
-    // Yaarl Styles keeps c-fashion + c-ecommerce while having c-descriptive
-    const yaarl = portfolio.find((p) => p.slug === "yaarl-styles")!;
-    expect(yaarl.categoryId).toBe("c-fashion");
-    expect(yaarl.extraCategoryIds).toContain("c-ecommerce");
-    expect(yaarl.extraCategoryIds).toContain("c-descriptive");
+    // Black Pearl Apparels keeps c-fashion + c-ecommerce while in Descriptive
+    const blackPearl = portfolio.find((p) => p.slug === "black-pearl-apparels")!;
+    expect(blackPearl.categoryId).toBe("c-fashion");
+    expect(blackPearl.extraCategoryIds).toContain("c-ecommerce");
+    expect(blackPearl.extraCategoryIds).toContain("c-descriptive");
+
+    // Teenntees keeps c-fashion + c-ecommerce while in Descriptive
+    const teenntees = portfolio.find((p) => p.slug === "teen-and-tees")!;
+    expect(teenntees.categoryId).toBe("c-fashion");
+    expect(teenntees.extraCategoryIds).toContain("c-ecommerce");
+    expect(teenntees.extraCategoryIds).toContain("c-descriptive");
+
+    // eZyMiles keeps c-travel while in Descriptive
+    const ezymiles = portfolio.find((p) => p.slug === "ezymiles")!;
+    expect(ezymiles.categoryId).toBe("c-travel");
+    expect(ezymiles.extraCategoryIds).toContain("c-descriptive");
   });
   it("allows a project to belong to an industry category and Descriptive simultaneously", () => {
     const bmw = portfolio.find((p) => p.slug === "bmw-interactive-experience")!;

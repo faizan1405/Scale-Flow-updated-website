@@ -160,12 +160,26 @@ function load() {
       persist();
     }
     if (envelope) {
-      // Ensure all .com projects include the Descriptive category in extraCategoryIds
+      // Ensure selected projects and all .com projects include the Descriptive category in extraCategoryIds
       const descCat = envelope.data.categories.find((c) => c.slug === "descriptive" || c.id === "c-descriptive");
       const descId = descCat?.id ?? "c-descriptive";
+      const descriptiveProjectIds = new Set([
+        "pf-afforda",
+        "pf-mainika",
+        "pf-yaarl",
+        "pf-tourism",
+        "pf-ezymiles",
+        "pf-blackpearl",
+        "pf-teenntees",
+      ]);
       let updatedProjects = false;
       envelope.data.projects = envelope.data.projects.map((p) => {
-        if (p.liveUrl && /\.com(?:\/|$)/i.test(p.liveUrl)) {
+        if (p.id === "pf-tourism" && p.liveUrl !== "https://silvercircletravel.com/") {
+          p = { ...p, liveUrl: "https://silvercircletravel.com/" };
+          updatedProjects = true;
+        }
+        const isTarget = descriptiveProjectIds.has(p.id) || (p.liveUrl && /\.com(?:\/|$)/i.test(p.liveUrl));
+        if (isTarget) {
           if (!p.extraCategoryIds?.includes(descId) && p.categoryId !== descId) {
             updatedProjects = true;
             return {

@@ -21,14 +21,17 @@ describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
     expect(descriptive?.enabled).toBe(true);
   });
 
-  it("automatically assigns all .com projects to Descriptive while preserving their original categories", () => {
+  it("automatically assigns selected projects to Descriptive while preserving their original categories", () => {
     const descId = "c-descriptive";
     const assigned = portfolio.filter((p) => inCategory(p, descId));
-    expect(assigned).toHaveLength(3);
-    expect(assigned.every((p) => (p.liveUrl ?? "").includes(".com"))).toBe(true);
+    expect(assigned).toHaveLength(7);
     expect(assigned.map((p) => p.slug).sort()).toEqual([
       "afforda-technologies",
+      "black-pearl-apparels",
+      "ezymiles",
       "mainika",
+      "silver-circle-travel",
+      "teen-and-tees",
       "yaarl-styles",
     ]);
   });
