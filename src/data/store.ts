@@ -159,6 +159,25 @@ function load() {
       });
       persist();
     }
+    if (envelope) {
+      // Ensure all .com projects include the Descriptive category in extraCategoryIds
+      const descCat = envelope.data.categories.find((c) => c.slug === "descriptive" || c.id === "c-descriptive");
+      const descId = descCat?.id ?? "c-descriptive";
+      let updatedProjects = false;
+      envelope.data.projects = envelope.data.projects.map((p) => {
+        if (p.liveUrl && /\.com(?:\/|$)/i.test(p.liveUrl)) {
+          if (!p.extraCategoryIds?.includes(descId) && p.categoryId !== descId) {
+            updatedProjects = true;
+            return {
+              ...p,
+              extraCategoryIds: [...(p.extraCategoryIds ?? []), descId],
+            };
+          }
+        }
+        return p;
+      });
+      if (updatedProjects) persist();
+    }
     state = envelope.data;
   } catch {
     /* corrupted storage — show defaults, leave stored data untouched */

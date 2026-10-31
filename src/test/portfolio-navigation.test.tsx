@@ -21,10 +21,16 @@ describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
     expect(descriptive?.enabled).toBe(true);
   });
 
-  it("does not automatically assign all 26 projects to Descriptive", () => {
+  it("automatically assigns all .com projects to Descriptive while preserving their original categories", () => {
     const descId = "c-descriptive";
     const assigned = portfolio.filter((p) => inCategory(p, descId));
-    expect(assigned).toHaveLength(0);
+    expect(assigned).toHaveLength(3);
+    expect(assigned.every((p) => (p.liveUrl ?? "").includes(".com"))).toBe(true);
+    expect(assigned.map((p) => p.slug).sort()).toEqual([
+      "afforda-technologies",
+      "mainika",
+      "yaarl-styles",
+    ]);
   });
 
   it("allows a project to belong to an industry category and Descriptive simultaneously without conflict", () => {
