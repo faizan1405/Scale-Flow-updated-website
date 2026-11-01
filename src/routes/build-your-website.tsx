@@ -9,17 +9,27 @@ import { btnGhost, btnPrimary, btnWhatsApp } from "@/components/site/Magnetic";
 import { buildQuotation, buildQuoteMessage, calculateQuote, featuresFor, formatINR, quotationFilename, whatsappLink, type QuoteDetails } from "@/lib/quote";
 import { ensureGsap, prefersReducedMotion, useIsoLayoutEffect } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { CALCULATOR_SCHEMA, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo-schema";
 
 export const Route = createFileRoute("/build-your-website")({
   validateSearch: z.object({ ref: z.string().optional().catch(undefined) }),
   head: () => ({
     meta: [
-      { title: "Quotation Studio — Build Your Website | Scale Flow" },
-      { name: "description", content: "Choose your website type, goals and functionality, see a transparent estimate and send your requirements to Scale Flow on WhatsApp." },
-      { property: "og:title", content: "Quotation Studio — Scale Flow" },
-      { property: "og:description", content: "Shape your website around your business goals and get a transparent estimate." },
+      { title: "Website Cost Calculator India | Instant Website Price Estimate in ₹ — Scale Flow" },
+      { name: "description", content: "Calculate your custom website design & development cost in India instantly. Transparent pricing in INR (₹) starting from ₹15,000. Choose features, calculate price, and get an instant proposal on WhatsApp." },
+      { name: "keywords", content: "website cost calculator india, website design cost in india, how much does a website cost in india, website price calculator inr, instant website quotation online, web development price list india, startup website cost india" },
+      { property: "og:title", content: "Website Cost Calculator India | Instant Website Estimate in ₹" },
+      { property: "og:description", content: "Transparent website pricing for Indian businesses and startups. Calculate custom estimate in minutes and connect on WhatsApp." },
+      { property: "og:url", content: "https://joinscaleflow.in/build-your-website" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Website Cost Calculator India | Scale Flow" },
+      { name: "twitter:description", content: "Calculate your website design and development cost in India with instant transparent estimates in ₹." },
+      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://joinscaleflow.in/build-your-website" },
     ],
   }),
   component: Builder,
@@ -280,6 +290,13 @@ function Builder() {
                 <div>
                   <h2 className="font-display mb-8 text-3xl md:text-4xl">Your estimated investment</h2>
                   <div data-card className="rounded-3xl border border-ivory/10 bg-card p-6 shadow-deep md:p-10">
+                    <div className="mb-8 flex items-center justify-between border-b border-ivory/10 pb-5">
+                      <div className="flex items-center gap-3">
+                        <img src="/brand/scaleflow-mark-dark.png" alt="" className="h-6 w-auto object-contain" width="40" height="24" />
+                        <span className="font-display text-lg text-ivory">Scale <span className="text-gold">Flow</span></span>
+                      </div>
+                      <span className="label-mono text-[9px] tracking-[0.2em] text-gold/80">OFFICIAL ESTIMATE</span>
+                    </div>
                     <Block title="Website package">
                       <Line k={pkg.name} v={pkg.price !== null ? formatINR(pkg.price) : "Custom quotation"} />
                     </Block>
@@ -392,10 +409,84 @@ function Builder() {
             </div>
           </aside>
         </div>
+
+        {/* SEO FAQ Section for Indian Startups & Businesses */}
+        <section aria-labelledby="faq-heading" className="mt-28 border-t border-ivory/10 pt-20">
+          <div className="mx-auto max-w-4xl">
+            <p className="label-mono mb-3 text-gold">Frequently Asked Questions</p>
+            <h2 id="faq-heading" className="font-display text-3xl md:text-5xl text-ivory">
+              Website Pricing & Development in India
+            </h2>
+            <p className="mt-4 text-base text-ivory/60 max-w-2xl">
+              Clear, transparent answers to help founders, business owners, and creators choose the right web development partner.
+            </p>
+
+            <div className="mt-12 space-y-4">
+              {ESTIMATOR_FAQS.map((faq, idx) => (
+                <details
+                  key={idx}
+                  className="group rounded-2xl border border-ivory/10 bg-card p-6 transition-colors hover:border-gold/30 [&_summary::-webkit-details-marker]:hidden"
+                >
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold text-lg text-ivory">
+                    <span>{faq.question}</span>
+                    <span className="text-gold transition-transform duration-300 group-open:rotate-180">
+                      ↓
+                    </span>
+                  </summary>
+                  <p className="mt-4 text-sm leading-relaxed text-ivory/70">
+                    {faq.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
+
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(CALCULATOR_SCHEMA) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getFaqSchema(ESTIMATOR_FAQS)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema(BREADCRUMB)) }}
+      />
     </main>
   );
 }
+
+const ESTIMATOR_FAQS = [
+  {
+    question: "How much does website development cost in India?",
+    answer: "Website development cost in India typically ranges from ₹15,000 for standard business starter websites, ₹30,000 for multi-page lead generation websites, up to ₹45,000 to ₹1,50,000+ for custom animated brand platforms, 3D interactive experiences, and full-featured e-commerce stores. Scale Flow provides upfront transparent pricing in INR.",
+  },
+  {
+    question: "How does the Scale Flow instant website cost calculator work?",
+    answer: "Select your project type (Basic, Business, Premium, E-commerce, or 3D Interactive), define your business goals, and pick only the functionality you need (such as admin panels, payment gateways, booking systems, or animations). You instantly get an itemized estimate in INR that you can download as a PDF or send directly to WhatsApp for a quick consultation.",
+  },
+  {
+    question: "How long does it take to design and build a website?",
+    answer: "Most custom business and startup websites launch within 7 to 14 business days. Larger platforms with e-commerce or custom 3D web animations typically take 3 to 4 weeks. You review working pages on live staging links at every milestone.",
+  },
+  {
+    question: "Why choose Scale Flow over generic ₹5,000 WordPress templates?",
+    answer: "Generic templates are slow, clunky, prone to security vulnerabilities, and look identical to hundreds of competitors. Scale Flow builds bespoke, ultra-fast modern React websites engineered for high conversion rates, flawless mobile performance, and premium brand perception.",
+  },
+  {
+    question: "Can I accept online payments like UPI, Credit Cards, and Net Banking?",
+    answer: "Yes, we integrate compliant and trusted Indian payment gateways such as Razorpay, Cashfree, Stripe, and PhonePe with instant UPI, debit/credit cards, and net banking support.",
+  },
+];
+
+const BREADCRUMB = [
+  { name: "Home", path: "/" },
+  { name: "Website Cost Calculator", path: "/build-your-website" },
+];
 
 const inputCls = "w-full rounded-xl border border-ivory/15 bg-card px-4 py-3 text-base placeholder:text-grey/70 focus:border-gold focus:outline-none";
 

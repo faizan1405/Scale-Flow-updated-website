@@ -16,12 +16,21 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Scale Flow — The Digital Showroom" },
-      { name: "description", content: "Don't just view our work. Experience it. Explore immersive websites by Scale Flow and build your website estimate in minutes." },
-      { property: "og:title", content: "Scale Flow — The Digital Showroom" },
-      { property: "og:description", content: "Explore immersive websites by Scale Flow and build your website estimate in minutes." },
+      { title: "Scale Flow | Web Design & Development Company India — Startups & Businesses" },
+      { name: "description", content: "Scale Flow is a leading web design and development company in India crafting high-performance, bespoke websites, 3D experiences, and e-commerce stores for ambitious startups and businesses. Get transparent pricing in INR and instant WhatsApp estimates." },
+      { name: "keywords", content: "web design company india, website development for startups, custom react website design, modern web design agency india, luxury website design india, website designers delhi, scaleflow" },
+      { property: "og:title", content: "Scale Flow | Web Design & Development Company in India" },
+      { property: "og:description", content: "High-performance bespoke websites, 3D interactive experiences, and e-commerce stores for Indian startups and businesses. Instant pricing in INR." },
+      { property: "og:url", content: "https://joinscaleflow.in/" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Scale Flow | Web Design & Development Company India" },
+      { name: "twitter:description", content: "Bespoke websites & digital experiences for Indian startups & businesses. Instant estimates on WhatsApp." },
+      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://joinscaleflow.in/" },
     ],
   }),
   component: Home,
@@ -67,7 +76,8 @@ function Hero({ projects }: { projects: Project[] }) {
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-6">
           <p data-hero-label className="label-mono mb-8 flex items-center gap-3 text-gold">
-            <span className="h-px w-10 bg-gold" /> Scale Flow — Digital Showroom
+            <img src="/brand/scaleflow-mark-light.png" alt="" aria-hidden className="h-5 w-auto object-contain" width="30" height="18" />
+            <span className="h-px w-6 bg-gold/50" /> Scale Flow — Digital Showroom
           </p>
           <Words as="h1" text={settings.heroHeadline} italicLast className="font-display block text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98]" />
           <p data-hero-sub className="mt-8 max-w-md text-base leading-relaxed text-ivory/70 md:text-lg">{settings.heroSub}</p>

@@ -8,6 +8,7 @@ import { SiteMock } from "@/components/site/SiteMock";
 import { Words } from "@/components/site/Words";
 import { ensureGsap, prefersReducedMotion, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { getBreadcrumbSchema } from "@/lib/seo-schema";
 
 const searchSchema = z.object({
   category: z.string().optional().catch(undefined),
@@ -18,10 +19,21 @@ export const Route = createFileRoute("/work/")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Selected Work — Scale Flow" },
-      { name: "description", content: "A collection of digital experiences crafted with creativity, precision and purpose by Scale Flow." },
-      { property: "og:title", content: "Selected Work — Scale Flow" },
-      { property: "og:description", content: "Browse websites, stores, 3D experiences and web apps by Scale Flow." },
+      { title: "Website Design Portfolio & Client Case Studies | Scale Flow India" },
+      { name: "description", content: "Explore our portfolio of high-performance websites, 3D interactive experiences, and e-commerce stores crafted for Indian startups, brands, and businesses." },
+      { name: "keywords", content: "website design portfolio india, startup website examples, web development agency case studies, ecommerce websites india, 3d website development portfolio" },
+      { property: "og:title", content: "Website Design Portfolio & Case Studies | Scale Flow India" },
+      { property: "og:description", content: "Browse live websites, e-commerce stores, and 3D experiences built by Scale Flow for Indian startups and businesses." },
+      { property: "og:url", content: "https://joinscaleflow.in/work" },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Website Design Portfolio | Scale Flow India" },
+      { name: "twitter:description", content: "Live websites, e-commerce stores & 3D digital experiences by Scale Flow." },
+      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://joinscaleflow.in/work" },
     ],
   }),
   component: Work,
@@ -61,8 +73,17 @@ function Work() {
 
   const setSearch = (next: { category?: string | undefined; q?: string | undefined }) => navigate({ search: (s) => ({ ...s, ...next }), replace: true, resetScroll: false });
 
+  const breadcrumb = [
+    { name: "Home", path: "/" },
+    { name: "Portfolio", path: "/work" },
+  ];
+
   return (
     <main id="main" className="stage-graphite px-6 pb-32 pt-36 md:px-12 md:pt-44">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema(breadcrumb)) }}
+      />
       <div ref={head} className="mx-auto max-w-7xl">
         <p data-reveal className="label-mono mb-6 text-grey">Portfolio — {list.length} {list.length === 1 ? "project" : "projects"}</p>
         <Words as="h1" text="Selected Work." italicLast className="font-display block text-[clamp(3.5rem,12vw,11rem)] leading-[0.88]" />

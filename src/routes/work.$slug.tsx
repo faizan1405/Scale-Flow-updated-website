@@ -11,19 +11,34 @@ import { btnGhost, btnPrimary, SlideLabel } from "@/components/site/Magnetic";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/site/WhatsApp";
 import { prefersReducedMotion, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { getBreadcrumbSchema, getProjectSchema } from "@/lib/seo-schema";
 
 export const Route = createFileRoute("/work/$slug")({
   loader: ({ params }) => {
     const p = seed.projects.find((x) => x.slug === params.slug);
-    return { title: p?.title ?? "Project", summary: p?.summary ?? "A Scale Flow project." };
+    return {
+      title: p?.title ?? "Project",
+      summary: p?.summary ?? "A Scale Flow digital experience.",
+      slug: params.slug,
+      coverImage: p?.coverImage,
+    };
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? "Project"} — Scale Flow` },
-      { name: "description", content: loaderData?.summary ?? "A Scale Flow project." },
-      { property: "og:title", content: `${loaderData?.title ?? "Project"} — Scale Flow` },
-      { property: "og:description", content: loaderData?.summary ?? "A Scale Flow project." },
+      { title: `${loaderData?.title ?? "Project"} — Web Design Case Study | Scale Flow India` },
+      { name: "description", content: `${loaderData?.summary ?? "A custom digital experience built by Scale Flow."} View full live preview, design breakdown, and technical features.` },
+      { property: "og:title", content: `${loaderData?.title ?? "Project"} — Scale Flow India` },
+      { property: "og:description", content: loaderData?.summary ?? "A custom web design project built by Scale Flow." },
+      { property: "og:url", content: `https://joinscaleflow.in/work/${loaderData?.slug ?? ""}` },
       { property: "og:type", content: "article" },
+      { property: "og:image", content: loaderData?.coverImage ? (loaderData.coverImage.startsWith("http") ? loaderData.coverImage : `https://joinscaleflow.in${loaderData.coverImage}`) : "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: `${loaderData?.title ?? "Project"} | Scale Flow` },
+      { name: "twitter:description", content: loaderData?.summary ?? "A custom web design project by Scale Flow." },
+      { name: "twitter:image", content: loaderData?.coverImage ? (loaderData.coverImage.startsWith("http") ? loaderData.coverImage : `https://joinscaleflow.in${loaderData.coverImage}`) : "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+    ],
+    links: [
+      { rel: "canonical", href: `https://joinscaleflow.in/work/${loaderData?.slug ?? ""}` },
     ],
   }),
   component: ProjectPage,
@@ -67,8 +82,22 @@ function Detail({ project: p, next, category }: { project: Project; next?: Proje
       ]
     : gallery;
 
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    { name: "Portfolio", path: "/work" },
+    { name: p.title, path: `/work/${p.slug}` },
+  ];
+
   return (
     <main id="main" ref={ref}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema(breadcrumbs)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getProjectSchema(p)) }}
+      />
       {/* 01 opening */}
       <section className="relative overflow-hidden px-6 pb-20 pt-36 md:px-12 md:pt-44">
         <div aria-hidden className="absolute -top-40 left-1/2 h-[60vh] w-[80vw] -translate-x-1/2 rounded-full opacity-25 blur-[120px]" style={{ background: p.palette.accent }} />

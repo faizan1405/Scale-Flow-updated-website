@@ -11,16 +11,18 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
-import { Nav } from "@/components/site/Nav";
+import { Nav, Logo } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppFab } from "@/components/site/WhatsApp";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AGENCY_SCHEMA, WEBSITE_SCHEMA } from "../lib/seo-schema";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <Logo className="mb-8" />
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
@@ -48,7 +50,8 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <Logo className="mb-6" />
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
           This page didn't load
@@ -83,12 +86,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Scale Flow — The Digital Showroom" },
-      { name: "description", content: "Explore websites and digital experiences crafted by Scale Flow." },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { name: "googlebot", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { name: "geo.region", content: "IN-DL" },
+      { name: "geo.placename", content: "New Delhi, Connaught Place" },
+      { name: "geo.position", content: "28.6315;77.2167" },
+      { name: "ICBM", content: "28.6315, 77.2167" },
+      { title: "Scale Flow | Web Design & Development Company India — Startups & Businesses" },
+      { name: "description", content: "Scale Flow is a leading web design and development studio in India. We craft high-performance websites, 3D interactive experiences, and e-commerce stores for ambitious startups and businesses. Transparent pricing in INR." },
+      { name: "keywords", content: "web design company india, website development for startups, custom react website design, modern web design agency india, luxury website design india, website developers delhi, scaleflow" },
       { name: "author", content: "Scale Flow" },
-      { name: "theme-color", content: "#191F28" },
+      { name: "theme-color", content: "#0E0E0E" },
+      { property: "og:site_name", content: "Scale Flow" },
+      { property: "og:locale", content: "en_IN" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Scale Flow — Premium Web Design & Development Studio India" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@scaleflow" },
+      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
       {
@@ -112,9 +130,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="bg-background">
+    <html lang="en-IN" className="bg-background">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(AGENCY_SCHEMA) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_SCHEMA) }}
+        />
       </head>
       <body>
         {children}

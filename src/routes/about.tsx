@@ -8,16 +8,26 @@ import { whatsappLink } from "@/lib/quote";
 import { useRef, useState } from "react";
 import { ensureGsap, prefersReducedMotion, useIsoLayoutEffect, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { getBreadcrumbSchema } from "@/lib/seo-schema";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About & Contact — Scale Flow" },
-      { name: "description", content: "Scale Flow is a web development studio crafting premium websites and digital experiences. Start a conversation on WhatsApp." },
-      { property: "og:title", content: "About & Contact — Scale Flow" },
-      { property: "og:description", content: "Meet Scale Flow and start a conversation about your website." },
+      { title: "About Scale Flow | Web Design & Development Agency New Delhi, India" },
+      { name: "description", content: "Scale Flow is an independent web design and development studio based in Connaught Place, New Delhi. We craft high-performance websites and digital experiences for Indian startups and businesses." },
+      { name: "keywords", content: "about scale flow, web design agency new delhi, website developers connaught place, web development company india, hire web developers delhi" },
+      { property: "og:title", content: "About Scale Flow | Web Design & Development Studio India" },
+      { property: "og:description", content: "Meet Scale Flow — crafting bespoke websites and digital experiences for startups and businesses in India." },
+      { property: "og:url", content: "https://joinscaleflow.in/about" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "About Scale Flow | Web Studio India" },
+      { name: "twitter:description", content: "Meet Scale Flow — web design and development studio in New Delhi, India." },
+      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://joinscaleflow.in/about" },
     ],
   }),
   component: About,
@@ -96,8 +106,17 @@ function About() {
     { icon: WhatsAppIcon, label: "WhatsApp", value: display, href: whatsappLink(settings.whatsapp, "Hi Scale Flow, I'd like to enquire about a website."), cta: "Start a chat", external: true, long: false },
     { icon: MapPin, label: "Visit our office", value: settings.location, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.location)}`, cta: "Open in Google Maps", external: true, long: true },
   ];
+  const breadcrumb = [
+    { name: "Home", path: "/" },
+    { name: "About & Contact", path: "/about" },
+  ];
+
   return (
     <main id="main" ref={ref} className="surface-light px-5 pb-32 pt-32 sm:px-8 md:px-12 md:pt-44">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema(breadcrumb)) }}
+      />
       <div className="mx-auto max-w-7xl">
         <p data-reveal className="label-mono mb-6 text-grey">About Scale Flow</p>
         <Words as="h1" text="A studio for websites worth exploring." italicLast className="font-display block max-w-5xl text-[clamp(3rem,8vw,7.5rem)] leading-[0.92]" />
@@ -108,6 +127,26 @@ function About() {
           <p data-reveal className="text-ivory/60 md:col-span-5 md:col-start-8">
             Every project combines considered design, solid engineering and a clear path for your visitors to get in touch. This showroom is itself an example of the craft we bring to client work.
           </p>
+        </div>
+
+        <div data-reveal className="mt-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6 rounded-3xl border border-ivory/15 bg-card/60 p-6 sm:p-8 backdrop-blur-sm shadow-sm">
+          <div className="flex items-center gap-5">
+            <img
+              src="/brand/scaleflow-mark-light.png"
+              alt="Scale Flow Emblem"
+              className="h-14 w-auto object-contain sm:h-16"
+              width="68"
+              height="40"
+            />
+            <div>
+              <p className="font-display text-2xl text-ivory">Scale <span className="text-gold">Flow</span></p>
+              <p className="label-mono text-[10px] tracking-[0.24em] text-gold font-semibold">STRATEGIC GROWTH PARTNER</p>
+            </div>
+          </div>
+          <div className="sm:border-l sm:border-ivory/15 sm:pl-8">
+            <p className="label-mono text-xs text-grey">Brand Promise</p>
+            <p className="mt-1 text-sm text-ivory/80">Engineered for commercial momentum, brand prestige &amp; conversion.</p>
+          </div>
         </div>
 
         <section className="mt-28 md:mt-36" aria-label="How we work">

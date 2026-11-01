@@ -1,8 +1,14 @@
+# https://joinscaleflow.in robots.txt
+
 User-agent: Googlebot
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
 
 User-agent: Twitterbot
 Allow: /
@@ -10,5 +16,15 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: WhatsApp
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
+
+Sitemap: https://joinscaleflow.in/sitemap.xml

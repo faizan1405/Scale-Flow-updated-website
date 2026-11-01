@@ -11,15 +11,70 @@ const links = [
   { to: "/about", label: "About", n: "04" },
 ] as const;
 
-export function Logo({ className }: { className?: string }) {
+export interface LogoProps {
+  className?: string;
+  variant?: "mark" | "horizontal" | "full";
+  theme?: "dark" | "light";
+  showTagline?: boolean;
+}
+
+export function Logo({ className, variant = "mark", theme = "dark", showTagline = false }: LogoProps) {
+  const markSrc = theme === "light" ? "/brand/scaleflow-mark-light.png" : "/brand/scaleflow-mark-dark.png";
+  const fullSrc = theme === "light" ? "/brand/scaleflow-logo-light.png" : "/brand/scaleflow-logo-dark.png";
+  const horizontalSrc = theme === "light" ? "/brand/scaleflow-horizontal-full-light.png" : "/brand/scaleflow-horizontal-full-dark.png";
+
+  if (variant === "full") {
+    return (
+      <Link to="/" className={cn("group inline-flex flex-col items-start gap-2", className)} aria-label="Scale Flow home">
+        <img
+          src={fullSrc}
+          alt="Scale Flow — Strategic Growth Partner"
+          className="h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-16"
+          width="210"
+          height="160"
+        />
+      </Link>
+    );
+  }
+
+  if (variant === "horizontal") {
+    return (
+      <Link to="/" className={cn("group inline-flex items-center", className)} aria-label="Scale Flow home">
+        <img
+          src={horizontalSrc}
+          alt="Scale Flow — Strategic Growth Partner"
+          className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-11"
+          width="240"
+          height="55"
+        />
+      </Link>
+    );
+  }
+
   return (
-    <Link to="/" className={cn("flex items-center gap-2.5 text-ivory", className)} aria-label="Scale Flow home">
-      <svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden>
-        <rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="currentColor" strokeOpacity="0.35" />
-        <path d="M9 21c3 0 4-2.5 7-5s4-5 7-5" fill="none" stroke="var(--gold)" strokeWidth="2.2" strokeLinecap="round" />
-        <path d="M9 15c3 0 4-2.5 7-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeOpacity="0.6" />
-      </svg>
-      <span className="font-display text-2xl leading-none">Scale Flow</span>
+    <Link
+      to="/"
+      className={cn("group flex items-center gap-2.5 text-ivory transition-opacity hover:opacity-90", className)}
+      aria-label="Scale Flow home"
+    >
+      <img
+        src={markSrc}
+        alt=""
+        aria-hidden
+        className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8"
+        width="48"
+        height="29"
+      />
+      <div className="flex flex-col">
+        <span className="font-display text-2xl leading-none">
+          Scale <span className="text-gold">Flow</span>
+        </span>
+        {showTagline && (
+          <span className="label-mono mt-1 text-[8px] tracking-[0.24em] text-gold/85">
+            STRATEGIC GROWTH PARTNER
+          </span>
+        )}
+      </div>
     </Link>
   );
 }
@@ -100,9 +155,18 @@ export function Nav() {
             </li>
           ))}
         </ul>
-        <WhatsAppLink message="Hi Scale Flow, I want a website developed." className="btn btn-whatsapp w-full py-4 bg-whatsapp text-midnight">
-          <WhatsAppIcon className="h-5 w-5" /> Start on WhatsApp
-        </WhatsAppLink>
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 border-t border-ivory/10 pt-4">
+            <img src="/brand/scaleflow-mark-dark.png" alt="" className="h-7 w-auto object-contain" width="46" height="28" />
+            <div>
+              <p className="font-display text-lg text-ivory">Scale <span className="text-gold">Flow</span></p>
+              <p className="label-mono text-[8px] tracking-[0.24em] text-gold/80">STRATEGIC GROWTH PARTNER</p>
+            </div>
+          </div>
+          <WhatsAppLink message="Hi Scale Flow, I want a website developed." className="btn btn-whatsapp w-full py-4 bg-whatsapp text-midnight">
+            <WhatsAppIcon className="h-5 w-5" /> Start on WhatsApp
+          </WhatsAppLink>
+        </div>
       </div>
     </header>
   );

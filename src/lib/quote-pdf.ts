@@ -1,6 +1,7 @@
 // Renders a QuotationDoc to a branded PDF. Client-only: import dynamically.
 import { jsPDF } from "jspdf";
 import { QUOTE_NOTE, type QuotationDoc } from "./quote";
+import { SCALEFLOW_MARK_BASE64 } from "./logo-base64";
 
 // PDF colours mirror the brand palette (jsPDF cannot read CSS variables).
 const INK: [number, number, number] = [20, 23, 28];
@@ -28,13 +29,29 @@ export function renderQuotationPdf(doc: QuotationDoc, contact: PdfContact): Blob
   const header = (first: boolean) => {
     pdf.setFillColor(...CHAR);
     pdf.rect(0, 0, W, first ? 58 : 18, "F");
-    pdf.setDrawColor(...BRONZE);
-    pdf.setLineWidth(0.8);
-    pdf.line(M, first ? 20 : 11, M + 6, first ? 14 : 7);
-    pdf.setTextColor(...IVORY);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(first ? 13 : 10);
-    pdf.text("Scale Flow", M + 9, first ? 19 : 10.5);
+    const markW = first ? 15 : 9;
+    const markH = first ? 9 : 5.4;
+    try {
+      pdf.addImage(SCALEFLOW_MARK_BASE64, "PNG", M, first ? 11 : 6, markW, markH);
+      pdf.setTextColor(...IVORY);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(first ? 13 : 10);
+      pdf.text("Scale Flow", M + markW + 3, first ? 17 : 10);
+      if (first) {
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(6.5);
+        pdf.setTextColor(...BRONZE);
+        pdf.text("STRATEGIC GROWTH PARTNER", M + markW + 3, 20.5, { charSpace: 0.3 });
+      }
+    } catch {
+      pdf.setDrawColor(...BRONZE);
+      pdf.setLineWidth(0.8);
+      pdf.line(M, first ? 20 : 11, M + 6, first ? 14 : 7);
+      pdf.setTextColor(...IVORY);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(first ? 13 : 10);
+      pdf.text("Scale Flow", M + 9, first ? 19 : 10.5);
+    }
     if (first) {
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(8);

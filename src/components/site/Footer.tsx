@@ -43,7 +43,7 @@ export function Footer() {
         {/* Navigation + business information */}
         <div className="grid gap-12 py-14 sm:grid-cols-2 md:grid-cols-12 md:py-16">
           <div className="sm:col-span-2 md:col-span-5">
-            <Logo />
+            <Logo showTagline />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-grey">The Digital Showroom — websites and digital experiences designed and built in New Delhi.</p>
           </div>
           <nav aria-label="Footer" className="md:col-span-3">

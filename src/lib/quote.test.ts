@@ -84,4 +84,14 @@ describe("quotation PDF data", () => {
     expect(buildQuoteMessage(p, q, d)).toContain("Estimated Budget: Price to be confirmed");
     expect(buildQuotation(p, q, d, date).total).toBe("Price to be confirmed");
   });
+  it("renders branded quotation PDF with ScaleFlow mark", async () => {
+    const { buildQuotation, calculateQuote } = await import("./quote");
+    const { renderQuotationPdf } = await import("./quote-pdf");
+    const p = pkg("basic")!;
+    const q = calculateQuote(p, seed.features, []);
+    const doc = buildQuotation(p, q, { name: "Faizan", business: "ScaleFlow", phone: "+91 9999999999", businessType: "Digital", description: "", timeline: "", referenceUrl: "", goals: [] }, date);
+    const blob = renderQuotationPdf(doc, { email: "contact@joinscaleflow.com", phone: "+91 98737 21207", office: "New Delhi" });
+    expect(blob).toBeInstanceOf(Blob);
+    expect(blob.size).toBeGreaterThan(10000);
+  });
 });

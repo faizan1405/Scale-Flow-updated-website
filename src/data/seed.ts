@@ -55,8 +55,8 @@ export const seed: DB = {
     heroHeadline: "We Build Digital Experiences Worth Exploring.",
     heroSub: "An immersive showcase of websites, digital experiences and ambitious ideas brought to life by Scale Flow.",
     showreelUrl: "",
-    seoTitle: "Scale Flow — The Digital Showroom",
-    seoDescription: "Explore websites and digital experiences crafted by Scale Flow, then build your own website estimate in minutes.",
+    seoTitle: "Scale Flow | Web Design & Development Company India — Startups & Businesses",
+    seoDescription: "Scale Flow crafts high-performance websites, 3D interactive experiences, and e-commerce stores for Indian startups and businesses. Transparent pricing in INR and instant WhatsApp estimates.",
   },
   media: [],
 };

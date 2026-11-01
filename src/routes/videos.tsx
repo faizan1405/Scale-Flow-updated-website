@@ -10,14 +10,26 @@ import { WhatsAppLink } from "@/components/site/WhatsApp";
 import { btnGhost, btnPrimary, btnWhatsApp } from "@/components/site/Magnetic";
 import { useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { getBreadcrumbSchema } from "@/lib/seo-schema";
 
 export const Route = createFileRoute("/videos")({
   head: () => ({
     meta: [
-      { title: "The Motion Vault — Scale Flow" },
-      { name: "description", content: "Explore Scale Flow's work through real website walkthroughs and interactive demonstrations." },
-      { property: "og:title", content: "The Motion Vault — Scale Flow" },
-      { property: "og:description", content: "Website walkthroughs and interactive demonstrations by Scale Flow." },
+      { title: "The Motion Vault | Interactive Website Demos & Walkthroughs — Scale Flow India" },
+      { name: "description", content: "Watch real walkthroughs, animations, and live interactive demonstrations of custom websites built by Scale Flow for Indian startups and businesses." },
+      { name: "keywords", content: "website video demonstrations, interactive 3d website walkthroughs, startup website demos india, custom animation website showcase" },
+      { property: "og:title", content: "The Motion Vault | Interactive Website Demos — Scale Flow India" },
+      { property: "og:description", content: "Explore live walkthroughs and motion demonstrations of custom websites by Scale Flow." },
+      { property: "og:url", content: "https://joinscaleflow.in/videos" },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "The Motion Vault | Scale Flow India" },
+      { name: "twitter:description", content: "Interactive website walkthroughs and demonstrations by Scale Flow." },
+      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://joinscaleflow.in/videos" },
     ],
   }),
   component: Videos,
@@ -53,8 +65,17 @@ function Videos() {
   );
   const openProject = open ? db.projects.find((p) => p.id === open.projectId) : undefined;
 
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    { name: "Motion Vault", path: "/videos" },
+  ];
+
   return (
     <main id="main" ref={ref} className="surface-light px-5 pb-32 pt-32 sm:px-8 md:px-12 md:pt-44">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema(breadcrumbs)) }}
+      />
       <div className="mx-auto max-w-7xl">
         <p data-reveal className="label-mono mb-6 text-grey">Video gallery</p>
         <Words as="h1" text="The Motion Vault." italicLast className="font-display block text-[clamp(3.5rem,11vw,10rem)] leading-[0.88]" />

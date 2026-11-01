@@ -38,6 +38,24 @@ function Settings() {
         <AField label="SEO title" className="md:col-span-2"><input className={aInput} {...f("seoTitle")} /></AField>
         <AField label="SEO description" className="md:col-span-2"><textarea rows={2} className={aInput} {...f("seoDescription")} /></AField>
       </div>
+      <div className="mt-8 max-w-3xl rounded-xl border border-ivory/10 bg-card p-5">
+        <p className="font-semibold text-ivory">Brand Identity &amp; Logo Assets</p>
+        <p className="mt-1 text-sm text-ivory/60">Active vector-rendered &amp; high-DPI brand marks.</p>
+        <div className="mt-4 flex flex-wrap items-center gap-6">
+          <div className="rounded-lg border border-ivory/10 bg-midnight p-3 text-center">
+            <img src="/brand/scaleflow-mark-dark.png" alt="ScaleFlow Emblem" className="mx-auto h-10 w-auto object-contain" />
+            <p className="label-mono mt-2 text-[9px] text-gold">Emblem Mark</p>
+          </div>
+          <div className="rounded-lg border border-ivory/10 bg-midnight p-3 text-center">
+            <img src="/brand/scaleflow-horizontal-full-dark.png" alt="ScaleFlow Full Horizontal" className="mx-auto h-10 w-auto object-contain" />
+            <p className="label-mono mt-2 text-[9px] text-gold">Horizontal Lockup</p>
+          </div>
+          <div className="rounded-lg border border-ivory/10 bg-midnight p-3 text-center">
+            <img src="/favicon.png" alt="App Icon" className="mx-auto h-10 w-10 rounded-md object-contain" />
+            <p className="label-mono mt-2 text-[9px] text-gold">Favicon / App Icon</p>
+          </div>
+        </div>
+      </div>
       <p className="mt-6 max-w-3xl text-xs text-grey">Featured projects are chosen with the “Featured” switch on the Projects page. SEO fields are stored now and will be applied to page metadata once the backend serves them.</p>
       <div className="mt-12 max-w-3xl rounded-lg border border-coral/30 p-5">
         <p className="font-semibold">Reset demo data</p>
