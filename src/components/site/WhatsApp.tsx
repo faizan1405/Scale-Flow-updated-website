@@ -12,10 +12,10 @@ export function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 /** Opens a prefilled WhatsApp chat with the configured business number. Never sends automatically. */
-export function WhatsAppLink({ message, className, children }: { message: string; className?: string; children: ReactNode }) {
+export function WhatsAppLink({ message, className, children, tabIndex }: { message: string; className?: string; children: ReactNode; tabIndex?: number }) {
   const { settings } = useDB();
   return (
-    <a href={whatsappLink(settings.whatsapp, message)} target="_blank" rel="noopener noreferrer" className={className}>
+    <a href={whatsappLink(settings.whatsapp, message)} target="_blank" rel="noopener noreferrer" className={className} tabIndex={tabIndex}>
       {children}
     </a>
   );

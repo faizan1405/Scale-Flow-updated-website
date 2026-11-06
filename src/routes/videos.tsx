@@ -84,7 +84,15 @@ function Videos() {
         {hasAnyVideo && <div className="mt-14 flex flex-col gap-3 border-y border-ivory/10 py-4 md:flex-row md:items-center md:justify-between">
           <div className="-mx-1 flex gap-1 overflow-x-auto px-1 [scrollbar-width:none]" role="tablist" aria-label="Filter videos">
             {[{ id: "all", name: "All" }, ...cats].map((c) => (
-              <button key={c.id} role="tab" aria-selected={cat === c.id} onClick={() => setCat(c.id)} className={cn("whitespace-nowrap rounded-full px-4 py-2 text-sm transition-colors", cat === c.id ? "bg-ivory text-midnight" : "text-ivory/65 hover:text-ivory")}>
+              <button
+                key={c.id}
+                id={`tab-video-${c.id}`}
+                role="tab"
+                aria-selected={cat === c.id}
+                aria-controls="videos-grid"
+                onClick={() => setCat(c.id)}
+                className={cn("whitespace-nowrap rounded-full px-4 py-2 text-sm transition-colors", cat === c.id ? "bg-ivory text-midnight" : "text-ivory/65 hover:text-ivory")}
+              >
                 {c.name}
               </button>
             ))}
@@ -122,7 +130,7 @@ function Videos() {
             <button onClick={() => { setCat("all"); setQ(""); }} className={cn(btnPrimary, "mt-8")}>Show all videos</button>
           </div>
         ) : (
-          <div className="mt-14 columns-1 gap-8 md:columns-2">
+          <div id="videos-grid" className="mt-14 columns-1 gap-8 md:columns-2">
             {list.map((v, i) => {
               const proj = db.projects.find((p) => p.id === v.projectId);
               return (

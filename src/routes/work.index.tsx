@@ -97,8 +97,10 @@ function Work() {
                 return (
                   <button
                     key={c.id}
+                    id={`tab-cat-${c.id}`}
                     role="tab"
                     aria-selected={on}
+                    aria-controls="work-projects-grid"
                     onClick={() => setSearch({ category: c.slug })}
                     className={cn("whitespace-nowrap rounded-full px-4 py-2 text-sm transition-colors duration-300", on ? "bg-ivory text-midnight" : "text-ivory/65 hover:text-ivory")}
                   >
@@ -134,7 +136,7 @@ function Work() {
             </button>
           </div>
         ) : (
-          <div ref={grid} className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-12">
+          <div ref={grid} id="work-projects-grid" className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-12">
             {visible.map((p, i) => {
               const cat = db.categories.find((c) => c.id === p.categoryId);
               const kind = kindLabel(p);

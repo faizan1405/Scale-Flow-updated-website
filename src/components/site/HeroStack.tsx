@@ -96,14 +96,14 @@ export function HeroStack({ projects }: { projects: Project[] }) {
         {/* back panel */}
         <div data-depth="0.5" className="absolute right-0 top-[2%] w-[60%]">
           <button data-panel="back" type="button" onClick={() => setActive((a) => (a + 1) % n)} aria-label={`Show ${back.title}`} className="block w-full overflow-hidden rounded-[14px] opacity-90 shadow-deep ring-1 ring-ivory/10 transition-[filter] duration-500 [filter:saturate(0.85)] hover:[filter:saturate(1)]">
-            <SiteMock project={back} chrome={false} />
+            <SiteMock project={back} chrome={false} priority={true} />
           </button>
         </div>
 
         {/* main panel */}
-        <div data-depth="1" className="absolute left-0 top-[20%] w-[84%] sm:top-[22%]">
+        <div data-depth="1" id="hero-main-panel" role="tabpanel" aria-labelledby={`tab-hero-${active % n}`} className="absolute left-0 top-[20%] w-[84%] sm:top-[22%]">
           <Link to="/work/$slug" params={{ slug: main.slug }} data-panel="main" className="group block overflow-hidden rounded-[18px] shadow-deep ring-1 ring-ivory/10" aria-label={`View ${main.title}`}>
-            <SiteMock project={main} />
+            <SiteMock project={main} priority={true} />
           </Link>
           <p className="mt-4 flex items-center gap-4 pr-[22%] text-sm">
             <span className="label-mono text-gold">{String((active % n) + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}</span>
@@ -129,9 +129,11 @@ export function HeroStack({ projects }: { projects: Project[] }) {
           {list.map((p, i) => (
             <button
               key={p.id}
+              id={`tab-hero-${i}`}
               type="button"
               role="tab"
               aria-selected={i === active % n}
+              aria-controls="hero-main-panel"
               onClick={() => setActive(i)}
               className={cn(
                 "rounded-full border px-3.5 py-1.5 text-xs transition-colors duration-300",

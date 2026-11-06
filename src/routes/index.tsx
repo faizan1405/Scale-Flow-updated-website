@@ -31,6 +31,11 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://joinscaleflow.in/" },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/__l5e/assets-v1/0c91e1ac-5a8b-4651-b576-d6e7c7364a1d/sf-bmw-d2.jpg",
+      },
     ],
   }),
   component: Home,
@@ -76,7 +81,7 @@ function Hero({ projects }: { projects: Project[] }) {
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-6">
           <p data-hero-label className="label-mono mb-8 flex items-center gap-3 text-gold">
-            <img src="/brand/scaleflow-mark-light.png" alt="" aria-hidden className="h-5 w-auto object-contain" width="30" height="18" />
+            <img src="/brand/scaleflow-mark-light.png" alt="" aria-hidden className="h-5 w-auto object-contain aspect-[5/3]" width="30" height="18" />
             <span className="h-px w-6 bg-gold/50" /> Scale Flow — Digital Showroom
           </p>
           <Words as="h1" text={settings.heroHeadline} italicLast className="font-display block text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98]" />
@@ -108,7 +113,7 @@ function Intro() {
     if (!el || prefersReducedMotion()) return;
     const { gsap } = ensureGsap();
     const ctx = gsap.context(() => {
-      gsap.fromTo("[data-scrub-word]", { opacity: 0.12 }, { opacity: 1, stagger: 0.1, ease: "none", scrollTrigger: { trigger: el, start: "top 80%", end: "top 30%", scrub: true } });
+      gsap.fromTo("[data-scrub-word]", { opacity: 0.65 }, { opacity: 1, stagger: 0.1, ease: "none", scrollTrigger: { trigger: el, start: "top 80%", end: "top 30%", scrub: true } });
     }, el);
     return () => ctx.revert();
   }, []);
@@ -117,11 +122,14 @@ function Intro() {
     <section ref={ref} className="mx-auto max-w-7xl px-6 py-16 md:px-12 md:py-24">
       <p data-reveal className="label-mono mb-6 text-grey">(01) — Intent</p>
       <h2 className="font-display text-[clamp(2.6rem,7vw,7rem)] leading-[0.92]">
-        {text.split(" ").map((w, i) => (
-          <span key={i} data-scrub-word className={cn("inline-block pr-[0.25em]", i >= 3 && "text-gold")}>
-            {w}
-          </span>
-        ))}
+        <span className="sr-only">{text}</span>
+        <span aria-hidden="true">
+          {text.split(" ").map((w, i) => (
+            <span key={i} data-scrub-word className={cn("inline-block pr-[0.25em]", i >= 3 && "text-gold")}>
+              {w}
+            </span>
+          ))}
+        </span>
       </h2>
       <div className="mt-8 grid gap-8 md:grid-cols-12">
         <p data-reveal className="text-lg text-ivory/70 md:col-span-5 md:col-start-8 md:text-xl">
@@ -260,29 +268,31 @@ function Capabilities({ projects }: { projects: Project[] }) {
           <p data-reveal className="max-w-sm text-ivory/60">Hover or tap a capability to see a live website from our portfolio built for it.</p>
         </div>
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
-          <ul className="lg:col-span-5" role="tablist" aria-label="Capabilities">
+          <div className="flex flex-col lg:col-span-5" role="tablist" aria-label="Capabilities">
             {items.map((c, i) => {
               const on = c === cur;
               return (
-                <li key={c.name} className="border-b border-ivory/10">
+                <div key={c.name} className="border-b border-ivory/10">
                   <button
+                    id={`tab-cap-${i}`}
                     role="tab"
                     aria-selected={on}
+                    aria-controls="cap-stage-panel"
                     onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
                     onFocus={() => setActive(i)}
                     onClick={() => setActive(i)}
                     className="group relative flex w-full items-baseline gap-5 py-5 text-left md:py-6"
                   >
                     <span className={cn("label-mono w-8 transition-colors", on ? "text-gold" : "text-grey")}>{String(i + 1).padStart(2, "0")}</span>
-                    <span className={cn("font-display flex-1 text-3xl transition-all duration-500 md:text-[2.6rem]", on ? "translate-x-2 text-ivory" : "text-ivory/35 group-hover:text-ivory/60")}>{c.name}</span>
+                    <span className={cn("font-display flex-1 text-3xl transition-all duration-500 md:text-[2.6rem]", on ? "translate-x-2 text-ivory" : "text-ivory/65 group-hover:text-ivory")}>{c.name}</span>
                     <ArrowRight className={cn("h-5 w-5 transition-all duration-500", on ? "text-gold opacity-100" : "-translate-x-2 opacity-0")} />
                     <span aria-hidden className={cn("absolute -bottom-px left-0 h-px bg-gold transition-[width] duration-700 ease-out", on ? "w-full" : "w-0")} />
                   </button>
-                </li>
+                </div>
               );
             })}
-          </ul>
-          <div ref={stage} className="min-w-0 lg:col-span-7 lg:sticky lg:top-28 lg:self-start" role="tabpanel" aria-live="polite">
+          </div>
+          <div ref={stage} id="cap-stage-panel" className="min-w-0 lg:col-span-7 lg:sticky lg:top-28 lg:self-start" role="tabpanel" aria-labelledby={`tab-cap-${active}`} aria-live="polite">
             <div className="overflow-hidden rounded-2xl border border-ivory/10 bg-card p-2 shadow-deep md:p-3">
               <div data-cap-shot className="overflow-hidden rounded-xl">
                 <SiteMock project={p} />
@@ -356,10 +366,10 @@ function FinalCta() {
   const ref = useReveal<HTMLElement>();
   return (
     <>
-      <section aria-hidden className="overflow-hidden border-y border-ivory/10 py-6 md:py-8">
-        <div className="space-y-1 whitespace-nowrap">
-          <div className="font-display block w-max text-[clamp(3rem,8.5vw,8.5rem)] leading-[1.05] text-transparent [-webkit-text-stroke:1.5px_color-mix(in_oklab,var(--ivory)_40%,transparent)] [animation:marquee_70s_linear_infinite]">Scale Flow · Experience it · Scale Flow · Experience it · </div>
-          <div className="font-display block w-max text-[clamp(3rem,8.5vw,8.5rem)] leading-[1.05] text-ivory/[0.09] [animation:marquee-rev_90s_linear_infinite]">Scale Flow · Experience it · Scale Flow · Experience it · </div>
+      <section aria-hidden="true" role="presentation" className="overflow-hidden border-y border-ivory/10 py-6 md:py-8 select-none">
+        <div className="space-y-1 whitespace-nowrap" aria-hidden="true">
+          <div aria-hidden="true" className="font-display block w-max text-[clamp(3rem,8.5vw,8.5rem)] leading-[1.05] text-ivory/50 [animation:marquee_70s_linear_infinite]">Scale Flow · Experience it · Scale Flow · Experience it · </div>
+          <div aria-hidden="true" className="font-display block w-max text-[clamp(3rem,8.5vw,8.5rem)] leading-[1.05] text-ivory/50 [animation:marquee-rev_90s_linear_infinite]">Scale Flow · Experience it · Scale Flow · Experience it · </div>
         </div>
       </section>
       <section ref={ref} className="surface-light relative overflow-hidden px-6 py-24 md:px-12 md:py-32" aria-labelledby="cta-title">

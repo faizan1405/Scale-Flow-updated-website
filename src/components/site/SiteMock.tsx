@@ -12,12 +12,14 @@ export function SiteMock({
   image,
   className,
   chrome = true,
+  priority = false,
 }: {
   project: Project;
   variant?: "desktop" | "mobile";
   image?: string | undefined;
   className?: string | undefined;
   chrome?: boolean;
+  priority?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const src = image ?? (variant === "desktop" ? project.coverImage : project.mobileScreenshots[0]);
@@ -35,7 +37,15 @@ export function SiteMock({
         </div>
       )}
       {src && !failed ? (
-        <img src={src} alt={`${project.title} ${variant} screenshot`} loading="lazy" decoding="async" onError={() => setFailed(true)} className={cn("absolute inset-0 h-full w-full object-cover object-top transition-[object-position] duration-[2.4s] ease-out motion-reduce:transition-none", !mobile && "group-hover:object-[50%_35%]", chrome && !mobile && "top-[6%] h-[94%]")} />
+        <img
+          src={src}
+          alt={`${project.title} ${variant} screenshot`}
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          decoding="async"
+          onError={() => setFailed(true)}
+          className={cn("absolute inset-0 h-full w-full object-cover object-top transition-[object-position] duration-[2.4s] ease-out motion-reduce:transition-none", !mobile && "group-hover:object-[50%_35%]", chrome && !mobile && "top-[6%] h-[94%]")}
+        />
       ) : (
         <div className={cn("absolute inset-0 flex flex-col", chrome && !mobile && "top-[6%]")} style={{ containerType: "inline-size" }}>
           <MockBody project={project} mobile={mobile} />

@@ -55,13 +55,12 @@ export function Logo({ className, variant = "mark", theme = "dark", showTagline 
     <Link
       to="/"
       className={cn("group flex items-center gap-2.5 text-ivory transition-opacity hover:opacity-90", className)}
-      aria-label="Scale Flow home"
     >
       <img
         src={markSrc}
         alt=""
         aria-hidden
-        className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8"
+        className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 aspect-[48/29]"
         width="48"
         height="29"
       />
@@ -139,6 +138,7 @@ export function Nav() {
 
       <div
         id="mobile-menu"
+        inert={!open ? true : undefined}
         className={cn(
           "fixed inset-0 -z-10 flex flex-col justify-between bg-midnight px-6 pb-10 pt-28 transition-[clip-path] duration-700 ease-[cubic-bezier(0.7,0,0.2,1)] lg:hidden",
           open ? "[clip-path:inset(0_0_0_0)]" : "pointer-events-none [clip-path:inset(0_0_100%_0)]",
@@ -157,13 +157,13 @@ export function Nav() {
         </ul>
         <div className="space-y-4">
           <div className="flex items-center gap-3 border-t border-ivory/10 pt-4">
-            <img src="/brand/scaleflow-mark-dark.png" alt="" className="h-7 w-auto object-contain" width="46" height="28" />
+            <img src="/brand/scaleflow-mark-dark.png" alt="" className="h-7 w-auto object-contain aspect-[48/29]" width="46" height="28" />
             <div>
               <p className="font-display text-lg text-ivory">Scale <span className="text-gold">Flow</span></p>
               <p className="label-mono text-[8px] tracking-[0.24em] text-gold/80">STRATEGIC GROWTH PARTNER</p>
             </div>
           </div>
-          <WhatsAppLink message="Hi Scale Flow, I want a website developed." className="btn btn-whatsapp w-full py-4 bg-whatsapp text-midnight">
+          <WhatsAppLink message="Hi Scale Flow, I want a website developed." tabIndex={open ? 0 : -1} className="btn btn-whatsapp w-full py-4 bg-whatsapp text-midnight">
             <WhatsAppIcon className="h-5 w-5" /> Start on WhatsApp
           </WhatsAppLink>
         </div>

@@ -42,7 +42,7 @@ const PROCESS = [
 
 /** Vertical journey: a gold line draws as you scroll and each stage lights up when it reaches the centre. */
 function ProcessJourney() {
-  const ref = useRef<HTMLOListElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   useIsoLayoutEffect(() => {
     const el = ref.current;
@@ -63,34 +63,36 @@ function ProcessJourney() {
     return () => (io.disconnect(), ctx.revert());
   }, []);
   return (
-    <ol ref={ref} className="relative">
-      <span aria-hidden className="absolute bottom-0 left-[1.15rem] top-0 w-px bg-ivory/15 md:left-[calc(25%-0.5px)]" />
-      <span aria-hidden data-line className="absolute bottom-0 left-[1.15rem] top-0 w-px origin-top bg-gold md:left-[calc(25%-0.5px)]" />
-      {PROCESS.map((p, i) => {
-        const on = i <= active;
-        return (
-          <li key={p.t} data-step={i} className="relative grid gap-4 pb-16 pl-12 last:pb-0 md:grid-cols-4 md:gap-10 md:pb-24 md:pl-0">
-            <span
-              aria-hidden
-              className={cn(
-                "absolute left-[1.15rem] top-3 h-3 w-3 -translate-x-1/2 rounded-full border transition-all duration-700 md:left-1/4",
-                on ? "scale-125 border-gold bg-gold shadow-[0_0_0_6px_color-mix(in_oklab,var(--gold)_18%,transparent)]" : "border-ivory/30 bg-midnight",
-              )}
-            />
-            <p data-step-in className={cn("font-display text-[clamp(4rem,9vw,8rem)] leading-[0.8] transition-colors duration-700 md:pr-10 md:text-right", on ? "text-gold" : "text-outline text-ivory/30")}>
-              {String(i + 1).padStart(2, "0")}
-            </p>
-            <div className="md:col-span-3 md:pl-12">
-              <h3 data-step-in className="font-display text-4xl md:text-5xl">{p.t}</h3>
-              <p data-step-in className="mt-4 max-w-xl text-lg leading-relaxed text-ivory/70">{p.d}</p>
-              <p data-step-in className={cn("mt-6 inline-flex items-center gap-3 rounded-full border px-4 py-2 text-sm transition-colors duration-700", on ? "border-gold/50 bg-card text-ivory" : "border-ivory/10 text-ivory/50")}>
-                <span className="label-mono text-gold">You get</span> {p.out}
+    <div ref={ref} className="relative">
+      <span aria-hidden="true" className="absolute bottom-0 left-[1.15rem] top-0 w-px bg-ivory/15 md:left-[calc(25%-0.5px)]" />
+      <span aria-hidden="true" data-line className="absolute bottom-0 left-[1.15rem] top-0 w-px origin-top bg-gold md:left-[calc(25%-0.5px)]" />
+      <ol className="m-0 list-none p-0">
+        {PROCESS.map((p, i) => {
+          const on = i <= active;
+          return (
+            <li key={p.t} data-step={i} className="relative grid gap-4 pb-16 pl-12 last:pb-0 md:grid-cols-4 md:gap-10 md:pb-24 md:pl-0">
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute left-[1.15rem] top-3 h-3 w-3 -translate-x-1/2 rounded-full border transition-all duration-700 md:left-1/4",
+                  on ? "scale-125 border-gold bg-gold shadow-[0_0_0_6px_color-mix(in_oklab,var(--gold)_18%,transparent)]" : "border-ivory/30 bg-midnight",
+                )}
+              />
+              <p data-step-in className={cn("font-display text-[clamp(4rem,9vw,8rem)] leading-[0.8] transition-colors duration-700 md:pr-10 md:text-right", on ? "text-gold" : "text-outline text-ivory/30")}>
+                {String(i + 1).padStart(2, "0")}
               </p>
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+              <div className="md:col-span-3 md:pl-12">
+                <h3 data-step-in className="font-display text-4xl md:text-5xl">{p.t}</h3>
+                <p data-step-in className="mt-4 max-w-xl text-lg leading-relaxed text-ivory/70">{p.d}</p>
+                <p data-step-in className={cn("mt-6 inline-flex items-center gap-3 rounded-full border px-4 py-2 text-sm transition-colors duration-700", on ? "border-gold/50 bg-card text-ivory" : "border-ivory/10 text-ivory/50")}>
+                  <span className="label-mono text-gold">You get</span> {p.out}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
