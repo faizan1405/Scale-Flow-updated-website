@@ -172,6 +172,7 @@ function load() {
         "pf-blackpearl",
         "pf-teenntees",
       ]);
+      const threeDProjectIds = new Set(["pf-noctra", "pf-ironforge"]);
       let updatedProjects = false;
       envelope.data.projects = envelope.data.projects.map((p) => {
         if (p.id === "pf-tourism" && p.liveUrl !== "https://silvercircletravel.com/") {
@@ -182,15 +183,42 @@ function load() {
         if (isTarget) {
           if (!p.extraCategoryIds?.includes(descId) && p.categoryId !== descId) {
             updatedProjects = true;
-            return {
+            p = {
               ...p,
               extraCategoryIds: [...(p.extraCategoryIds ?? []), descId],
+            };
+          }
+        }
+        if (threeDProjectIds.has(p.id)) {
+          if (!p.extraCategoryIds?.includes("c-3d") && p.categoryId !== "c-3d") {
+            updatedProjects = true;
+            p = {
+              ...p,
+              extraCategoryIds: [...(p.extraCategoryIds ?? []), "c-3d"],
+              tags: p.tags?.includes("3D") ? p.tags : [...(p.tags ?? []), "3D"],
             };
           }
         }
         return p;
       });
       if (updatedProjects) persist();
+
+      // Ensure all 26 official HD walkthrough videos are loaded into existing stores
+      if (envelope.data.videos.filter((v) => v.published && !!v.src).length === 0) {
+        envelope.data.videos = seed.videos;
+        persist();
+      }
+      // Ensure videoUrl on projects stays in sync with seed projects
+      let updatedProjectVideos = false;
+      envelope.data.projects = envelope.data.projects.map((p) => {
+        const seedProj = seed.projects.find((sp) => sp.id === p.id);
+        if (seedProj?.videoUrl && p.videoUrl !== seedProj.videoUrl) {
+          updatedProjectVideos = true;
+          return { ...p, videoUrl: seedProj.videoUrl };
+        }
+        return p;
+      });
+      if (updatedProjectVideos) persist();
     }
     state = envelope.data;
   } catch {

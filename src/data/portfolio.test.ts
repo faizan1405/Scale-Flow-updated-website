@@ -107,4 +107,50 @@ describe("imported portfolio", () => {
     expect(inCategory(marble!, "c-3d")).toBe(true);
     expect(inCategory(marble!, "c-realestate")).toBe(true);
   });
+
+  it("includes Noctra Mattress and Ironforge in 3D Interactive category while preserving their original categories", () => {
+    const noctra = portfolio.find((p) => p.slug === "noctra-mattress");
+    expect(noctra).toBeDefined();
+    expect(noctra?.liveUrl).toBe("https://noctramattress.joinscaleflow.in/");
+    expect(noctra?.categoryId).toBe("c-ecommerce");
+    expect(noctra?.extraCategoryIds).toContain("c-3d");
+    expect(noctra?.tags).toContain("3D");
+    expect(inCategory(noctra!, "c-3d")).toBe(true);
+    expect(inCategory(noctra!, "c-ecommerce")).toBe(true);
+
+    const ironforge = portfolio.find((p) => p.slug === "ironforge");
+    expect(ironforge).toBeDefined();
+    expect(ironforge?.liveUrl).toBe("https://ironforge.joinscaleflow.in/");
+    expect(ironforge?.categoryId).toBe("c-business");
+    expect(ironforge?.extraCategoryIds).toContain("c-catalogue");
+    expect(ironforge?.extraCategoryIds).toContain("c-3d");
+    expect(ironforge?.tags).toContain("3D");
+    expect(inCategory(ironforge!, "c-3d")).toBe(true);
+    expect(inCategory(ironforge!, "c-business")).toBe(true);
+    expect(inCategory(ironforge!, "c-catalogue")).toBe(true);
+  });
+
+  it("contains all 26 website videos in seed.videos with valid files and thumbnails", () => {
+    expect(seed.videos).toHaveLength(26);
+    expect(new Set(seed.videos.map((v) => v.id)).size).toBe(26);
+
+    for (const v of seed.videos) {
+      expect(v.src).toBeDefined();
+      expect(v.src?.startsWith("/videos/")).toBe(true);
+      expect(v.thumbnail).toBeDefined();
+      expect(v.thumbnail?.startsWith("/videos/thumbnails/")).toBe(true);
+      expect(v.published).toBe(true);
+    }
+  });
+
+  it("links portfolio projects to their matching video walkthroughs", () => {
+    const projectsWithVideos = portfolio.filter((p) => !!p.videoUrl);
+    expect(projectsWithVideos.length).toBeGreaterThanOrEqual(24);
+
+    for (const p of projectsWithVideos) {
+      expect(p.videoUrl?.startsWith("/videos/")).toBe(true);
+      const videoEntry = seed.videos.find((v) => v.src === p.videoUrl);
+      expect(videoEntry, `Expected seed video for ${p.videoUrl}`).toBeDefined();
+    }
+  });
 });

@@ -172,4 +172,19 @@ describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
     expect(topBtn.textContent).toContain("View Website");
     expect(bottomBtn.textContent).toContain("Visit Live Website");
   });
+
+  it("filters 3D Interactive category to include both Noctra Mattress and Ironforge", () => {
+    const threeDId = "c-3d";
+    const threeDProjects = portfolio.filter((p) => inCategory(p, threeDId));
+    const slugs = threeDProjects.map((p) => p.slug);
+
+    expect(slugs).toContain("noctra-mattress");
+    expect(slugs).toContain("ironforge");
+
+    const noctra = threeDProjects.find((p) => p.slug === "noctra-mattress");
+    expect(noctra?.liveUrl).toBe("https://noctramattress.joinscaleflow.in/");
+
+    const ironforge = threeDProjects.find((p) => p.slug === "ironforge");
+    expect(ironforge?.liveUrl).toBe("https://ironforge.joinscaleflow.in/");
+  });
 });

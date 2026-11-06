@@ -221,7 +221,7 @@ function SelectedWork({ projects }: { projects: Project[] }) {
 
 /* 04 — CAPABILITIES: hover/tap a capability to reveal a real project from the portfolio */
 const CAPS: { name: string; cat: string; ids: string[] }[] = [
-  { name: "3D Interactive", cat: "3d-interactive", ids: ["pf-bmw", "pf-velora"] },
+  { name: "3D Interactive", cat: "3d-interactive", ids: ["pf-bmw", "pf-velora", "pf-noctra", "pf-ironforge"] },
   { name: "E-commerce", cat: "e-commerce", ids: ["pf-noctra"] },
   { name: "Fashion", cat: "fashion", ids: ["pf-lehenga", "pf-mainika"] },
   { name: "Business", cat: "business", ids: ["pf-scaleflow", "pf-afforda"] },
@@ -296,9 +296,9 @@ function Capabilities({ projects }: { projects: Project[] }) {
               </div>
               <div className="flex flex-col items-start gap-3">
                 <Link to="/work/$slug" params={{ slug: p.slug }} className={btnPrimary}>View Project <ArrowUpRight className="h-4 w-4" /></Link>
-                {cur.list[1] && (
-                  <Link to="/work/$slug" params={{ slug: cur.list[1].slug }} className="link-underline text-sm text-ivory/60">Also: {cur.list[1].title}</Link>
-                )}
+                {cur.list.slice(1).map((item) => (
+                  <Link key={item.id} to="/work/$slug" params={{ slug: item.slug }} className="link-underline text-sm text-ivory/60">Also: {item.title}</Link>
+                ))}
               </div>
             </div>
           </div>
