@@ -9,6 +9,7 @@ const links = [
   { to: "/videos", label: "Videos", n: "02" },
   { to: "/build-your-website", label: "Build Your Website", n: "03" },
   { to: "/about", label: "About", n: "04" },
+  { to: "/contact", label: "Contact", n: "05" },
 ] as const;
 
 export interface LogoProps {

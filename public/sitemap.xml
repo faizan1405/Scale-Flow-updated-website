@@ -26,6 +26,18 @@
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://joinscaleflow.in/contact</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://joinscaleflow.in/privacy</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://joinscaleflow.in/videos</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>

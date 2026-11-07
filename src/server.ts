@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import llmsContent from "../public/llms.txt?raw";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -46,9 +47,39 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const url = new URL(request.url);
+    const accept = request.headers.get("accept") ?? "";
+
+    // Content negotiation for AI agents & LLM crawlers (e.g. ChatGPT, Claude, Gemini, is-agentic)
+    if (url.pathname === "/llms.txt" || (url.pathname === "/" && accept.includes("text/markdown"))) {
+      return new Response(llmsContent, {
+        status: 200,
+        headers: {
+          "content-type": "text/markdown; charset=utf-8",
+          "vary": "Accept",
+          "cache-control": "public, max-age=3600, s-maxage=86400",
+        },
+      });
+    }
+
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
+
+      // Markdown 404 fallback for agents requesting text/markdown
+      if (response.status >= 400 && accept.includes("text/markdown")) {
+        return new Response(
+          `# 404 Not Found\n\nThe requested page does not exist on Scale Flow.\n\n- [Home](https://joinscaleflow.in/)\n- [Our Work](https://joinscaleflow.in/work)\n- [Build Your Website](https://joinscaleflow.in/build-your-website)\n- [Contact Us](https://joinscaleflow.in/contact)\n- [LLMs Overview](https://joinscaleflow.in/llms.txt)\n- [Sitemap](https://joinscaleflow.in/sitemap.xml)\n`,
+          {
+            status: 404,
+            headers: {
+              "content-type": "text/markdown; charset=utf-8",
+              "vary": "Accept",
+            },
+          },
+        );
+      }
+
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);

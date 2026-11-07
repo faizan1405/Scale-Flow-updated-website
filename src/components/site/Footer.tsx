@@ -10,6 +10,7 @@ const NAV = [
   { to: "/build-your-website", label: "Build Your Website" },
   { to: "/videos", label: "Motion Vault" },
   { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact Us" },
 ] as const;
 
 export function Footer() {
@@ -75,6 +76,10 @@ export function Footer() {
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-ivory/10 pt-6 text-xs text-grey">
           <span>© {new Date().getFullYear()} {settings.brandName}. All rights reserved.</span>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy" className="link-underline hover:text-ivory">Privacy Policy</Link>
+            <Link to="/contact" className="link-underline hover:text-ivory">Connaught Place, New Delhi</Link>
+          </div>
           <span className="label-mono pr-16">Don't just view it — experience it.</span>
         </div>
       </div>

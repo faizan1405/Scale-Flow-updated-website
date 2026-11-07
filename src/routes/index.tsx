@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CheckCircle2, ChevronDown, MapPin, Play, Sparkles, Zap } from "lucide-react";
 import { byOrder, useDB } from "@/data/store";
 import { kindLabel } from "@/data/portfolio-utils";
 import type { Project } from "@/data/types";
@@ -12,21 +12,38 @@ import { VideoModal } from "@/components/site/VideoModal";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/site/WhatsApp";
 import { ensureGsap, prefersReducedMotion, useIsoLayoutEffect, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { HOMEPAGE_FAQS, HOMEPAGE_FAQ_SCHEMA } from "@/lib/seo-schema";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Scale Flow | Web Design & Development Company India — Startups & Businesses" },
-      { name: "description", content: "Scale Flow is a leading web design and development company in India crafting high-performance, bespoke websites, 3D experiences, and e-commerce stores for ambitious startups and businesses. Get transparent pricing in INR and instant WhatsApp estimates." },
-      { name: "keywords", content: "web design company india, website development for startups, custom react website design, modern web design agency india, luxury website design india, website designers delhi, scaleflow" },
-      { property: "og:title", content: "Scale Flow | Web Design & Development Company in India" },
-      { property: "og:description", content: "High-performance bespoke websites, 3D interactive experiences, and e-commerce stores for Indian startups and businesses. Instant pricing in INR." },
+      { title: "Best Website Maker in Delhi | Web Developer Delhi — Scale Flow" },
+      {
+        name: "description",
+        content:
+          "Scale Flow is the premier website maker and web developer in Delhi. We craft high-performance bespoke websites, 3D interactive experiences, and e-commerce stores for ambitious startups and businesses. Transparent pricing in INR. Based in Connaught Place, New Delhi.",
+      },
+      {
+        name: "keywords",
+        content:
+          "website maker, website developer in delhi, best website maker in delhi, website maker in delhi, web designers in delhi, custom react website development delhi, web development company connaught place, website makers india",
+      },
+      { property: "og:title", content: "Best Website Maker in Delhi | Web Developer Delhi — Scale Flow" },
+      {
+        property: "og:description",
+        content:
+          "Scale Flow is the premier website maker and web developer in Delhi. High-performance bespoke websites, 3D interactive experiences & online stores for startups & businesses. Instant pricing in INR.",
+      },
       { property: "og:url", content: "https://joinscaleflow.in/" },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Scale Flow | Web Design & Development Company India" },
-      { name: "twitter:description", content: "Bespoke websites & digital experiences for Indian startups & businesses. Instant estimates on WhatsApp." },
+      { name: "twitter:title", content: "Best Website Maker in Delhi | Web Developer Delhi — Scale Flow" },
+      {
+        name: "twitter:description",
+        content:
+          "Bespoke websites & 3D digital experiences for ambitious startups & businesses. Based in Connaught Place, New Delhi. Instant estimates on WhatsApp.",
+      },
       { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
@@ -47,11 +64,17 @@ function Home() {
   const featured = projects.filter((p) => p.featured);
   return (
     <main id="main">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOMEPAGE_FAQ_SCHEMA) }}
+      />
       <Hero projects={featured.length ? featured : projects} />
       <Intro />
       <SelectedWork projects={featured.length ? featured : projects.slice(0, 3)} />
       <Capabilities projects={projects} />
+      <DelhiAuthority />
       <Showroom projects={projects} showreel={db.settings.showreelUrl} />
+      <FaqSection />
       <FinalCta />
     </main>
   );
@@ -318,6 +341,98 @@ function Capabilities({ projects }: { projects: Project[] }) {
   );
 }
 
+/* 04.5 — DELHI LOCAL AUTHORITY & SEO */
+function DelhiAuthority() {
+  const ref = useReveal<HTMLElement>();
+  return (
+    <section ref={ref} className="relative px-6 py-24 md:px-12 md:py-32" aria-labelledby="delhi-title">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-6">
+            <p data-reveal className="label-mono mb-4 flex items-center gap-2 text-gold">
+              <MapPin className="h-4 w-4" /> Connaught Place, New Delhi · Serving Startups Across India
+            </p>
+            <Words
+              as="h2"
+              text="Delhi's Premier Website Maker & Web Developer."
+              italicLast
+              className="font-display block text-[clamp(2.4rem,5vw,4.5rem)] leading-[1.02]"
+            />
+            <p data-reveal className="mt-6 text-base leading-relaxed text-ivory/70 md:text-lg">
+              Ambitious brands don't settle for bloated WordPress templates or sluggish generic site builders.
+              Scale Flow is an independent digital studio in New Delhi engineering bespoke, high-performance web
+              applications with custom React code, buttery 60fps GSAP motion, and sub-1 second loading speeds.
+            </p>
+            <div data-reveal className="mt-8 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-xl border border-ivory/10 bg-card/60 p-5 backdrop-blur">
+                <div className="flex items-center gap-3 text-gold">
+                  <Zap className="h-5 w-5" />
+                  <span className="font-display text-xl text-ivory">100/100 Speed</span>
+                </div>
+                <p className="mt-2 text-sm text-ivory/60">
+                  Certified Lighthouse performance. Ultra-fast Core Web Vitals maximize your Google organic rankings.
+                </p>
+              </div>
+              <div className="rounded-xl border border-ivory/10 bg-card/60 p-5 backdrop-blur">
+                <div className="flex items-center gap-3 text-gold">
+                  <Sparkles className="h-5 w-5" />
+                  <span className="font-display text-xl text-ivory">3D & Interactive</span>
+                </div>
+                <p className="mt-2 text-sm text-ivory/60">
+                  WebGL 3D product showrooms and fluid kinetic typography that elevate brand perception instantly.
+                </p>
+              </div>
+            </div>
+            <div data-reveal className="mt-10 flex flex-wrap items-center gap-4">
+              <Link to="/build-your-website" className={btnPrimary}>
+                <SlideLabel>Calculate Website Cost</SlideLabel> <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link to="/contact" className={btnGhost}>
+                <SlideLabel>Visit Delhi Studio</SlideLabel> <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+          <div className="lg:col-span-6">
+            <div data-reveal className="rounded-2xl border border-ivory/10 bg-card p-6 md:p-8 shadow-deep">
+              <span className="label-mono text-gold">Why Founders & Businesses Choose Us</span>
+              <ul className="mt-6 space-y-5 text-sm md:text-base">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-gold mt-0.5" />
+                  <div>
+                    <strong className="text-ivory">Transparent Pricing in INR:</strong> Single-page starter sites from ₹15,000, multi-page business websites from ₹30,000. No surprise charges.
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-gold mt-0.5" />
+                  <div>
+                    <strong className="text-ivory">Direct WhatsApp Access:</strong> Message lead engineers directly. Real-time feedback, same-day adjustments, zero bureaucracy.
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-gold mt-0.5" />
+                  <div>
+                    <strong className="text-ivory">Local Delhi Presence & Global Reach:</strong> Based at Regal Building, Connaught Place, New Delhi. Available for in-person meetings in Delhi NCR.
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-gold mt-0.5" />
+                  <div>
+                    <strong className="text-ivory">SEO & Conversion Engineered:</strong> Schema.org structured data, semantic HTML5, and automated GEO compliance for ChatGPT and Google Gemini discovery.
+                  </div>
+                </li>
+              </ul>
+              <div className="mt-8 border-t border-ivory/10 pt-6 flex flex-wrap items-center justify-between gap-4 text-xs text-grey">
+                <span>Serving Connaught Place · South Delhi · Gurugram · Noida · Pan-India</span>
+                <span className="font-mono text-gold">Pin: 110001</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* 05 — SHOWROOM IN MOTION: real screenshots drifting past; a reel button only appears once a real showreel exists */
 function Showroom({ projects, showreel }: { projects: Project[]; showreel: string }) {
   const [open, setOpen] = useState(false);
@@ -357,6 +472,60 @@ function Showroom({ projects, showreel }: { projects: Project[]; showreel: strin
         ))}
       </div>
       {showreel && <VideoModal open={open} onClose={() => setOpen(false)} src={showreel} title="Scale Flow Showreel" />}
+    </section>
+  );
+}
+
+/* 05.5 — FREQUENTLY ASKED QUESTIONS (GEO & SEO) */
+function FaqSection() {
+  const ref = useReveal<HTMLElement>();
+  return (
+    <section ref={ref} className="surface-light px-6 py-24 md:px-12 md:py-32" aria-labelledby="faq-title">
+      <div className="mx-auto max-w-4xl">
+        <div className="text-center">
+          <p data-reveal className="label-mono mb-4 text-gold">(05) — Clarity & Answers</p>
+          <Words
+            as="h2"
+            text="Frequently Asked Questions."
+            italicLast
+            className="font-display block text-4xl sm:text-5xl md:text-6xl"
+          />
+          <p data-reveal className="mt-4 text-base text-ivory/65 md:text-lg">
+            Everything you need to know about working with Delhi's top custom website maker and web developer.
+          </p>
+        </div>
+
+        <div data-reveal className="mt-14 space-y-4">
+          {HOMEPAGE_FAQS.map((faq, idx) => (
+            <details
+              key={idx}
+              className="group rounded-2xl border border-ivory/10 bg-card p-6 transition-colors duration-300 hover:border-gold/30 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-4 text-left font-display text-xl text-ivory transition-colors group-open:text-gold md:text-2xl">
+                <span>{faq.question}</span>
+                <ChevronDown className="h-5 w-5 shrink-0 text-grey transition-transform duration-300 group-open:rotate-180 group-open:text-gold" />
+              </summary>
+              <p className="mt-4 text-sm leading-relaxed text-ivory/70 md:text-base border-t border-ivory/10 pt-4">
+                {faq.answer}
+              </p>
+            </details>
+          ))}
+        </div>
+
+        <div data-reveal className="mt-12 rounded-2xl border border-gold/20 bg-card/60 p-6 text-center">
+          <p className="text-sm text-ivory/70 md:text-base">
+            Have a unique requirement or want a personalized proposal for your project?
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
+            <WhatsAppLink message="Hi Scale Flow, I have a question about website development." className={btnPrimary}>
+              <WhatsAppIcon className="h-4 w-4" /> Ask on WhatsApp
+            </WhatsAppLink>
+            <Link to="/build-your-website" className={btnGhost}>
+              Calculate Instant Price <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

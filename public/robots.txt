@@ -1,9 +1,28 @@
 # https://joinscaleflow.in robots.txt
+# Optimized for Google, Bing, and Generative AI Search Engines (ChatGPT, Gemini, Perplexity, Claude)
 
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
 Disallow: /admin/*
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
 
 User-agent: Bingbot
 Allow: /

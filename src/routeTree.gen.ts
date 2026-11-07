@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BuildYourWebsiteRouteImport } from './routes/build-your-website'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
@@ -41,6 +43,16 @@ const AdminRoute = AdminRouteImport.update({
 const BuildYourWebsiteRoute = BuildYourWebsiteRouteImport.update({
   id: '/build-your-website',
   path: '/build-your-website',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosRoute = VideosRouteImport.update({
@@ -94,6 +106,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/build-your-website': typeof BuildYourWebsiteRoute
+  '/contact': typeof ContactRoute
+  '/privacy': typeof PrivacyRoute
   '/videos': typeof VideosRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
@@ -108,6 +122,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/build-your-website': typeof BuildYourWebsiteRoute
+  '/contact': typeof ContactRoute
+  '/privacy': typeof PrivacyRoute
   '/videos': typeof VideosRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
@@ -124,6 +140,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/build-your-website': typeof BuildYourWebsiteRoute
+  '/contact': typeof ContactRoute
+  '/privacy': typeof PrivacyRoute
   '/videos': typeof VideosRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/media': typeof AdminMediaRoute
@@ -141,6 +159,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/build-your-website'
+    | '/contact'
+    | '/privacy'
     | '/videos'
     | '/admin/categories'
     | '/admin/media'
@@ -155,6 +175,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/build-your-website'
+    | '/contact'
+    | '/privacy'
     | '/videos'
     | '/admin/categories'
     | '/admin/media'
@@ -170,6 +192,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/build-your-website'
+    | '/contact'
+    | '/privacy'
     | '/videos'
     | '/admin/categories'
     | '/admin/media'
@@ -186,6 +210,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   BuildYourWebsiteRoute: typeof BuildYourWebsiteRoute
+  ContactRoute: typeof ContactRoute
+  PrivacyRoute: typeof PrivacyRoute
   VideosRoute: typeof VideosRoute
   WorkSlugRoute: typeof WorkSlugRoute
   WorkIndexRoute: typeof WorkIndexRoute
@@ -219,6 +245,20 @@ declare module '@tanstack/react-router' {
       path: '/build-your-website'
       fullPath: '/build-your-website'
       preLoaderRoute: typeof BuildYourWebsiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/videos': {
@@ -312,6 +352,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   BuildYourWebsiteRoute: BuildYourWebsiteRoute,
+  ContactRoute: ContactRoute,
+  PrivacyRoute: PrivacyRoute,
   VideosRoute: VideosRoute,
   WorkSlugRoute: WorkSlugRoute,
   WorkIndexRoute: WorkIndexRoute,
