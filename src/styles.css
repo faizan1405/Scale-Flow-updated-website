@@ -1,6 +1,5 @@
 @import "tailwindcss" source(none);
 @source "../src";
-@import "tw-animate-css";
 @import "../public/fonts/fonts.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -299,3 +298,8 @@
 }
 /* Contrast fix: on light/cream sections the gold fill is deepened so the light label stays readable (≥4.5:1). */
 .surface-light .btn-primary::before, .surface-cream .btn-primary::before { background-color: color-mix(in oklab, var(--gold) 80%, var(--ivory)); }
+
+html:not(.is-interactive) .cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}

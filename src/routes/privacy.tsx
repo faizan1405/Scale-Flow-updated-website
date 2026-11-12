@@ -18,11 +18,11 @@ export const Route = createFileRoute("/privacy")({
         property: "og:description",
         content: "Transparent privacy policy and data practices for Scale Flow clients.",
       },
-      { property: "og:url", content: "https://joinscaleflow.in/privacy" },
+      { property: "og:url", content: "https://www.joinscaleflow.in/privacy" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
-    links: [{ rel: "canonical", href: "https://joinscaleflow.in/privacy" }],
+    links: [{ rel: "canonical", href: "https://www.joinscaleflow.in/privacy" }],
   }),
   component: Privacy,
 });
@@ -88,8 +88,8 @@ function Privacy() {
               </li>
               <li>
                 <strong className="text-ivory">Technical & Analytics Data:</strong> Anonymous browser telemetry
-                (such as device type, browser version, and page load performance) used exclusively to maintain our 95+
-                PageSpeed standards and user accessibility.
+                (such as device type, browser version, and page load performance) used exclusively to monitor site
+                reliability, loading performance, and user accessibility.
               </li>
               <li>
                 <strong className="text-ivory">Zero Ad Trackers:</strong> We do not run invasive third-party
@@ -139,8 +139,8 @@ function Privacy() {
               </p>
               <p className="mt-2 text-sm text-ivory/70">
                 Email:{" "}
-                <a href="mailto:contact@joinscaleflow.com" className="link-underline text-gold">
-                  contact@joinscaleflow.com
+                <a href="mailto:business@joinscaleflow.in" className="link-underline text-gold">
+                  business@joinscaleflow.in
                 </a>
               </p>
               <p className="mt-1 text-sm text-ivory/70">

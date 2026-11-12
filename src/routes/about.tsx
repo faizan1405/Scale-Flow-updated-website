@@ -5,8 +5,8 @@ import { Words } from "@/components/site/Words";
 import { btnGhost } from "@/components/site/Magnetic";
 import { WhatsAppIcon } from "@/components/site/WhatsApp";
 import { whatsappLink } from "@/lib/quote";
-import { useRef, useState } from "react";
-import { ensureGsap, prefersReducedMotion, useIsoLayoutEffect, useReveal } from "@/lib/motion";
+import { useEffect, useRef, useState } from "react";
+import { useGsapEffect, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { getBreadcrumbSchema } from "@/lib/seo-schema";
 
@@ -18,16 +18,16 @@ export const Route = createFileRoute("/about")({
       { name: "keywords", content: "about scale flow, web design agency new delhi, website developers connaught place, web development company india, hire web developers delhi" },
       { property: "og:title", content: "About Scale Flow | Web Design & Development Studio India" },
       { property: "og:description", content: "Meet Scale Flow — crafting bespoke websites and digital experiences for startups and businesses in India." },
-      { property: "og:url", content: "https://joinscaleflow.in/about" },
+      { property: "og:url", content: "https://www.joinscaleflow.in/about" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "About Scale Flow | Web Studio India" },
       { name: "twitter:description", content: "Meet Scale Flow — web design and development studio in New Delhi, India." },
-      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
-      { rel: "canonical", href: "https://joinscaleflow.in/about" },
+      { rel: "canonical", href: "https://www.joinscaleflow.in/about" },
     ],
   }),
   component: About,
@@ -44,7 +44,7 @@ const PROCESS = [
 function ProcessJourney() {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  useIsoLayoutEffect(() => {
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -52,15 +52,18 @@ function ProcessJourney() {
       { rootMargin: "-48% 0px -48% 0px" },
     );
     el.querySelectorAll("[data-step]").forEach((n) => io.observe(n));
-    if (prefersReducedMotion()) return () => io.disconnect();
-    const { gsap } = ensureGsap();
+    return () => io.disconnect();
+  }, []);
+  useGsapEffect(({ gsap }) => {
+    const el = ref.current;
+    if (!el) return;
     const ctx = gsap.context(() => {
       gsap.fromTo("[data-line]", { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: { trigger: el, start: "top 60%", end: "bottom 60%", scrub: true } });
       el.querySelectorAll<HTMLElement>("[data-step]").forEach((n) => {
         gsap.fromTo(n.querySelectorAll("[data-step-in]"), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: "expo.out", stagger: 0.08, scrollTrigger: { trigger: n, start: "top 80%", once: true } });
       });
     }, el);
-    return () => (io.disconnect(), ctx.revert());
+    return () => ctx.revert();
   }, []);
   return (
     <div ref={ref} className="relative">
@@ -101,7 +104,7 @@ function About() {
   const ref = useReveal<HTMLElement>();
   const digits = settings.whatsapp.replace(/\D/g, "");
   const display = "+" + digits.replace(/^(\d{2})(\d+)$/, "$1 $2");
-  const email = settings.email || "contact@joinscaleflow.com";
+  const email = settings.email || "business@joinscaleflow.in";
   const cards = [
     { icon: Mail, label: "Email", value: email, href: `mailto:${email}`, cta: "Write to us", external: false, long: false },
     { icon: Phone, label: "Call us", value: display, href: `tel:+${digits}`, cta: "Call now", external: false, long: false },

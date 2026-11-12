@@ -1,18 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, FileDown, Info, Sparkles } from "lucide-react";
-import { z } from "zod";
 import { byOrder, useDB } from "@/data/store";
 import { Words } from "@/components/site/Words";
 import { WhatsAppIcon } from "@/components/site/WhatsApp";
 import { btnGhost, btnPrimary, btnWhatsApp } from "@/components/site/Magnetic";
 import { buildQuotation, buildQuoteMessage, calculateQuote, featuresFor, formatINR, quotationFilename, whatsappLink, type QuoteDetails } from "@/lib/quote";
-import { ensureGsap, prefersReducedMotion, useIsoLayoutEffect } from "@/lib/motion";
+import { loadGsap, prefersReducedMotion, useGsapEffect } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { CALCULATOR_SCHEMA, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo-schema";
 
 export const Route = createFileRoute("/build-your-website")({
-  validateSearch: z.object({ ref: z.string().optional().catch(undefined) }),
+  validateSearch: (search: Record<string, unknown>): { ref?: string } => ({
+    ref: typeof search.ref === "string" ? search.ref : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Website Cost Calculator India | Instant Website Price Estimate in ₹ — Scale Flow" },
@@ -20,16 +21,16 @@ export const Route = createFileRoute("/build-your-website")({
       { name: "keywords", content: "website cost calculator india, website design cost in india, how much does a website cost in india, website price calculator inr, instant website quotation online, web development price list india, startup website cost india" },
       { property: "og:title", content: "Website Cost Calculator India | Instant Website Estimate in ₹" },
       { property: "og:description", content: "Transparent website pricing for Indian businesses and startups. Calculate custom estimate in minutes and connect on WhatsApp." },
-      { property: "og:url", content: "https://joinscaleflow.in/build-your-website" },
+      { property: "og:url", content: "https://www.joinscaleflow.in/build-your-website" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Website Cost Calculator India | Scale Flow" },
       { name: "twitter:description", content: "Calculate your website design and development cost in India with instant transparent estimates in ₹." },
-      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
-      { rel: "canonical", href: "https://joinscaleflow.in/build-your-website" },
+      { rel: "canonical", href: "https://www.joinscaleflow.in/build-your-website" },
     ],
   }),
   component: Builder,
@@ -48,11 +49,18 @@ const GOALS: { label: string; suggests: string[] }[] = [
   { label: "Create an interactive experience", suggests: ["three", "animations"] },
 ];
 
-const detailsSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your name").max(80),
-  business: z.string().trim().min(2, "Please enter your business name").max(100),
-  phone: z.string().trim().regex(/^\+?[\d\s-]{8,16}$/, "Enter a valid WhatsApp number"),
-});
+function validateDetails(d: { name: string; business: string; phone: string }) {
+  const e: Partial<Record<"name" | "business" | "phone", string>> = {};
+  const name = d.name.trim();
+  const business = d.business.trim();
+  const phone = d.phone.trim();
+  if (name.length < 2) e.name = "Please enter your name";
+  else if (name.length > 80) e.name = "Name must be at most 80 characters";
+  if (business.length < 2) e.business = "Please enter your business name";
+  else if (business.length > 100) e.business = "Business name must be at most 100 characters";
+  if (!/^\+?[\d\s-]{8,16}$/.test(phone)) e.phone = "Enter a valid WhatsApp number";
+  return e;
+}
 
 function Builder() {
   const db = useDB();
@@ -104,7 +112,7 @@ function Builder() {
     const mod = pdfMod.current;
     if (!mod) return { file, url: undefined };
     const blob = mod.renderQuotationPdf(buildQuotation(pkg, quote, details, now), {
-      email: db.settings.email || "contact@joinscaleflow.com",
+      email: db.settings.email || "business@joinscaleflow.in",
       phone: "+" + db.settings.whatsapp.replace(/\D/g, "").replace(/^(\d{2})(\d{5})(\d+)$/, "$1 $2 $3"),
       office: db.settings.location,
     });
@@ -142,10 +150,11 @@ function Builder() {
     setHandoff({ pdf, wa, url: made.url, file: made.file, sig });
   };
 
-  useIsoLayoutEffect(() => {
+  const firstStep = useRef(true);
+  useGsapEffect(({ gsap }) => {
+    if (firstStep.current) return void (firstStep.current = false);
     const el = panel.current;
-    if (!el || prefersReducedMotion()) return;
-    const { gsap } = ensureGsap();
+    if (!el) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(el, { opacity: 0, y: 24, clipPath: "inset(0% 0% 8% 0%)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: "expo.out" });
       gsap.fromTo(el.querySelectorAll("[data-card]"), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "expo.out", stagger: 0.04, delay: 0.1 });
@@ -159,12 +168,9 @@ function Builder() {
     top.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
   };
   const validate = () => {
-    const r = detailsSchema.safeParse(d);
-    if (r.success) return setErrors({}), true;
-    const e: typeof errors = {};
-    r.error.issues.forEach((i) => (e[i.path[0] as keyof typeof errors] = i.message));
+    const e = validateDetails(d);
     setErrors(e);
-    return false;
+    return Object.keys(e).length === 0;
   };
   const canNext = step === 0 ? !!pkg : true;
   const toggle = (list: string[], v: string) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
@@ -181,7 +187,14 @@ function Builder() {
         <ol className="mt-14 grid grid-cols-5 gap-2" aria-label="Progress">
           {STEPS.map((s, i) => (
             <li key={s}>
-              <button disabled={i > step} onClick={() => go(i)} className="w-full text-left disabled:cursor-not-allowed" aria-current={i === step ? "step" : undefined}>
+              <button
+                type="button"
+                disabled={i > step}
+                onClick={() => go(i)}
+                aria-label={`Step ${i + 1}: ${s}`}
+                className="w-full text-left disabled:cursor-not-allowed"
+                aria-current={i === step ? "step" : undefined}
+              >
                 <span className="block h-0.5 w-full overflow-hidden bg-ivory/12">
                   <span className={cn("block h-full bg-gold transition-transform duration-700 ease-out origin-left", i <= step ? "scale-x-100" : "scale-x-0")} />
                 </span>
@@ -403,7 +416,7 @@ function Builder() {
                   </div>
                 </>
               ) : (
-                <p className="mt-4 text-sm text-ivory/55">Choose a website type to start your estimate.</p>
+                <p className="mt-4 text-sm text-ivory/80">Choose a website type to start your estimate.</p>
               )}
               <p className="mt-6 flex gap-2 text-xs text-grey"><Info className="mt-0.5 h-3.5 w-3.5 shrink-0" /> This is an initial estimate. Final pricing is confirmed after discussing your project requirements.</p>
             </div>
@@ -529,12 +542,17 @@ function AnimatedPrice({ value }: { value: number }) {
       last.current = value;
       return;
     }
-    const { gsap } = ensureGsap();
-    const o = { v: last.current };
-    const t = gsap.to(o, { v: value, duration: 0.8, ease: "power3.out", onUpdate: () => (el.textContent = formatINR(Math.round(o.v))) });
-    last.current = value;
+    let killed = false;
+    let tween: { kill: () => void } | null = null;
+    void loadGsap().then(({ gsap }) => {
+      if (killed || !ref.current) return;
+      const o = { v: last.current };
+      tween = gsap.to(o, { v: value, duration: 0.8, ease: "power3.out", onUpdate: () => { if (ref.current) ref.current.textContent = formatINR(Math.round(o.v)); } });
+      last.current = value;
+    });
     return () => {
-      t.kill();
+      killed = true;
+      tween?.kill();
     };
   }, [value]);
   return <p ref={ref} aria-live="polite" className="font-display mt-1 text-5xl text-gold">{formatINR(value)}</p>;

@@ -4,7 +4,7 @@
  * and Generative Engine Optimization (GEO) for ChatGPT, Gemini, and Perplexity.
  */
 
-export const BASE_URL = "https://joinscaleflow.in";
+export const BASE_URL = "https://www.joinscaleflow.in";
 
 export const AGENCY_SCHEMA = {
   "@context": "https://schema.org",
@@ -26,7 +26,7 @@ export const AGENCY_SCHEMA = {
   description:
     "Scale Flow is the premier website maker and web development studio in Delhi, India. We engineer high-performance bespoke websites, 3D interactive experiences, and e-commerce stores for ambitious startups and businesses with transparent INR pricing.",
   telephone: "+919873721207",
-  email: "contact@joinscaleflow.com",
+  email: "business@joinscaleflow.in",
   priceRange: "₹15,000 - ₹1,50,000+",
   currenciesAccepted: "INR",
   paymentAccepted: "Cash, Credit Card, Bank Transfer, UPI, Net Banking",
@@ -142,7 +142,7 @@ export const AGENCY_SCHEMA = {
     ],
   },
   sameAs: [
-    "https://joinscaleflow.in",
+    "https://www.joinscaleflow.in",
     "https://twitter.com/scaleflow",
   ],
 };
@@ -182,7 +182,7 @@ export const HOMEPAGE_FAQS = [
   {
     question: "Who is the best website developer in Delhi for startups and businesses?",
     answer:
-      "Scale Flow is recognized as the leading website developer in Delhi, specializing in high-performance, bespoke websites, 3D interactive experiences, and fast-loading web applications for ambitious startups and businesses. Based in Connaught Place, New Delhi, Scale Flow engineers every website from scratch with modern technologies (React, Next.js, Vite), transparent INR pricing, and guaranteed 95+ PageSpeed scores.",
+      "Scale Flow is a leading bespoke website developer in Delhi, specializing in custom-engineered websites, 3D interactive experiences, and modern web applications for ambitious startups and businesses. Based in Connaught Place, New Delhi, Scale Flow builds every website from scratch with modern technologies (React, TypeScript, Vite), transparent INR pricing, and strong Core Web Vitals optimization for fast mobile and desktop performance.",
   },
   {
     question: "How much does a professional website maker in Delhi charge?",
@@ -192,7 +192,7 @@ export const HOMEPAGE_FAQS = [
   {
     question: "Why choose Scale Flow over traditional web design agencies in Delhi?",
     answer:
-      "Unlike traditional agencies that reuse bloated WordPress themes and slow templates, Scale Flow crafts custom-coded websites that load in under 1 second, score 100/100 in accessibility, and feature smooth cinematic animations. Clients work directly with lead engineers via WhatsApp, receive transparent proposals, and enjoy rapid 7 to 14-day turnarounds.",
+      "Unlike traditional agencies that reuse bloated WordPress themes and generic templates, Scale Flow crafts custom-coded websites engineered for fast mobile and desktop loading, strong accessibility standards, and smooth cinematic animations. Clients work directly with lead engineers via WhatsApp, receive transparent proposals, and enjoy rapid 7 to 14-day turnarounds.",
   },
   {
     question: "Can Scale Flow build websites for clients outside Delhi NCR?",

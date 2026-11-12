@@ -1,4 +1,3 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -14,7 +13,6 @@ import { useEffect, type ReactNode } from "react";
 import { Nav, Logo } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppFab } from "@/components/site/WhatsApp";
-import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AGENCY_SCHEMA, WEBSITE_SCHEMA } from "../lib/seo-schema";
@@ -81,7 +79,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{ queryClient?: unknown }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -100,34 +98,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Scale Flow" },
       { property: "og:locale", content: "en_IN" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: "Scale Flow — Premium Web Design & Development Studio India" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@scaleflow" },
-      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
-      {
-        rel: "preload",
-        href: "/fonts/space-grotesk-latin-600.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "preload",
-        href: "/fonts/manrope-latin-400.woff2",
-        as: "font",
-        type: "font/woff2",
-        crossOrigin: "anonymous",
-      },
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      ...(typeof document !== "undefined" && document.getElementById("sf-inline-css")
+        ? []
+        : [
+            {
+              rel: "stylesheet",
+              href: appCss,
+            },
+          ]),
       { rel: "icon", href: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
       { rel: "icon", href: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "512x512" },
@@ -163,11 +150,10 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
   const isAdmin = useRouterState({ select: (st) => st.location.pathname.startsWith("/admin") });
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       {!isAdmin && (
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded focus:bg-ivory focus:px-4 focus:py-2 focus:text-midnight">
@@ -178,7 +164,6 @@ function RootComponent() {
       <Outlet />
       {!isAdmin && <Footer />}
       {!isAdmin && <WhatsAppFab />}
-      <Toaster />
-    </QueryClientProvider>
+    </>
   );
 }

@@ -71,7 +71,7 @@ export const seed: DB = {
   settings: {
     whatsapp: "919873721207",
     brandName: "Scale Flow",
-    email: "contact@joinscaleflow.com",
+    email: "business@joinscaleflow.in",
     location: "3rd Floor, 44, Regal Building, 69, Connaught Cir, Hanuman Road Area, Connaught Place, New Delhi, Delhi 110001",
     heroHeadline: "We Build Digital Experiences Worth Exploring.",
     heroSub: "An immersive showcase of websites, digital experiences and ambitious ideas brought to life by Scale Flow.",

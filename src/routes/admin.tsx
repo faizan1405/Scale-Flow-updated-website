@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { FolderKanban, Image, LayoutDashboard, Receipt, Settings, Tags, ExternalLink, TriangleAlert } from "lucide-react";
 import { Logo } from "@/components/site/Nav";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -60,6 +61,7 @@ function AdminLayout() {
           <Outlet />
         </main>
       </div>
+      <Toaster />
     </div>
   );
 }

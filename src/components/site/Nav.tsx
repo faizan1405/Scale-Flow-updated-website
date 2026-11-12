@@ -61,6 +61,8 @@ export function Logo({ className, variant = "mark", theme = "dark", showTagline 
         src={markSrc}
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105 sm:h-8 aspect-[48/29]"
         width="48"
         height="29"
@@ -80,28 +82,47 @@ export function Logo({ className, variant = "mark", theme = "dark", showTagline 
 }
 
 export function Nav() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
   const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
-  const [light, setLight] = useState(false);
-  const path = useRouterState({ select: (s) => s.location.pathname });
+  const [light, setLight] = useState(() => !path.startsWith("/admin"));
 
   useEffect(() => {
-    // Adapt to whatever section sits under the bar: ivory on light sections, charcoal on dark ones.
-    const on = () => {
-      setCompact(window.scrollY > 40);
+    let rafId = 0;
+    const checkSurface = () => {
+      rafId = 0;
+      const y = window.scrollY;
+      setCompact(y > 40);
+      if (y <= 40) {
+        const first = document.querySelector("main > section, main > article, main > div");
+        if (first) {
+          setLight(/surface-(light|cream)/.test(first.className));
+          return;
+        }
+      }
       const els = document.elementsFromPoint(window.innerWidth / 2, 44);
       const under = els.find((e) => !e.closest("header"));
       const surf = under?.closest('[class*="surface-light"],[class*="surface-cream"],[class*="surface-dark"],footer,main');
       setLight(!!surf && /surface-(light|cream)/.test(surf.className));
     };
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    const onScroll = () => {
+      if (!rafId) rafId = window.requestAnimationFrame(checkSurface);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, []);
   useEffect(() => {
     setOpen(false);
-    const t = window.setTimeout(() => window.dispatchEvent(new Event("scroll")), 60);
-    return () => window.clearTimeout(t);
+    const id = window.requestAnimationFrame(() => {
+      const first = document.querySelector("main > section, main > article, main > div");
+      if (first && window.scrollY <= 40) {
+        setLight(/surface-(light|cream)/.test(first.className));
+      }
+    });
+    return () => window.cancelAnimationFrame(id);
   }, [path]);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";

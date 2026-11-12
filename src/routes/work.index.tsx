@@ -1,22 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Search, X } from "lucide-react";
-import { z } from "zod";
 import { byOrder, useDB } from "@/data/store";
 import { inCategory, kindLabel, matchesQuery } from "@/data/portfolio-utils";
 import { SiteMock } from "@/components/site/SiteMock";
 import { Words } from "@/components/site/Words";
-import { ensureGsap, prefersReducedMotion, useReveal } from "@/lib/motion";
+import { useGsapEffect, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { getBreadcrumbSchema } from "@/lib/seo-schema";
 
-const searchSchema = z.object({
-  category: z.string().optional().catch(undefined),
-  q: z.string().optional().catch(undefined),
-});
-
 export const Route = createFileRoute("/work/")({
-  validateSearch: searchSchema,
+  validateSearch: (search: Record<string, unknown>): { category?: string; q?: string } => ({
+    category: typeof search.category === "string" ? search.category : undefined,
+    q: typeof search.q === "string" ? search.q : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Website Design Portfolio & Client Case Studies | Scale Flow India" },
@@ -24,16 +21,16 @@ export const Route = createFileRoute("/work/")({
       { name: "keywords", content: "website design portfolio india, startup website examples, web development agency case studies, ecommerce websites india, 3d website development portfolio" },
       { property: "og:title", content: "Website Design Portfolio & Case Studies | Scale Flow India" },
       { property: "og:description", content: "Browse live websites, e-commerce stores, and 3D experiences built by Scale Flow for Indian startups and businesses." },
-      { property: "og:url", content: "https://joinscaleflow.in/work" },
+      { property: "og:url", content: "https://www.joinscaleflow.in/work" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Website Design Portfolio | Scale Flow India" },
       { name: "twitter:description", content: "Live websites, e-commerce stores & 3D digital experiences by Scale Flow." },
-      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
-      { rel: "canonical", href: "https://joinscaleflow.in/work" },
+      { rel: "canonical", href: "https://www.joinscaleflow.in/work" },
     ],
   }),
   component: Work,
@@ -64,9 +61,10 @@ function Work() {
   const head = useReveal<HTMLDivElement>();
   const grid = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!grid.current || prefersReducedMotion()) return;
-    const { gsap } = ensureGsap();
+  const firstWork = useRef(true);
+  useGsapEffect(({ gsap }) => {
+    if (firstWork.current) return void (firstWork.current = false);
+    if (!grid.current) return;
     const items = grid.current.querySelectorAll("[data-item]");
     gsap.fromTo(items, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "expo.out", stagger: 0.07 });
   }, [category, q, list.length, limit]);

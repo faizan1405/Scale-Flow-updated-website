@@ -1,20 +1,90 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-let registered = false;
-export function ensureGsap() {
-  if (!registered && typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
-    registered = true;
+export type GsapBundle = {
+  gsap: typeof import("gsap").default;
+  ScrollTrigger: typeof import("gsap/ScrollTrigger").ScrollTrigger;
+};
+
+let cached: GsapBundle | null = null;
+let pending: Promise<GsapBundle> | null = null;
+let readyPromise: Promise<void> | null = null;
+
+function waitForInteractionOrIdle(): Promise<void> {
+  if (typeof window === "undefined") return Promise.resolve();
+  if (cached) return Promise.resolve();
+  if (!readyPromise) {
+    readyPromise = new Promise<void>((resolve) => {
+      const events = ["scroll", "pointermove", "pointerdown", "touchstart", "keydown", "wheel"] as const;
+      const done = () => {
+        for (const ev of events) {
+          window.removeEventListener(ev, done);
+        }
+        clearTimeout(timer);
+        document.documentElement.classList.add("is-interactive");
+        resolve();
+      };
+      for (const ev of events) {
+        window.addEventListener(ev, done, { once: true, passive: true });
+      }
+      const timer = setTimeout(done, 4500);
+    });
   }
-  return { gsap, ScrollTrigger };
+  return readyPromise;
+}
+
+export function loadGsap(): Promise<GsapBundle> {
+  if (cached) return Promise.resolve(cached);
+  if (!pending) {
+    pending = Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([g, st]) => {
+      const gsap = g.default;
+      const ScrollTrigger = st.ScrollTrigger;
+      if (typeof window !== "undefined") {
+        gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.config({ ignoreMobileResize: true });
+      }
+      cached = { gsap, ScrollTrigger };
+      return cached;
+    });
+  }
+  return pending;
 }
 
 export const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+export function useGsapEffect(
+  cb: (bundle: GsapBundle) => (() => void) | void,
+  deps: unknown[] = [],
+) {
+  useEffect(() => {
+    if (typeof window === "undefined" || prefersReducedMotion()) return;
+    let cancelled = false;
+    let cleanup: (() => void) | void;
+
+    const run = () => {
+      void loadGsap().then((bundle) => {
+        if (cancelled) return;
+        cleanup = cb(bundle);
+      });
+    };
+
+    if (cached) {
+      run();
+    } else {
+      void waitForInteractionOrIdle().then(() => {
+        if (!cancelled) run();
+      });
+    }
+
+    return () => {
+      cancelled = true;
+      if (cleanup) cleanup();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+}
 
 /**
  * Scroll-triggered reveal for every [data-reveal] descendant.
@@ -22,12 +92,14 @@ export const prefersReducedMotion = () =>
  */
 export function useReveal<T extends HTMLElement>(deps: unknown[] = []): RefObject<T | null> {
   const ref = useRef<T>(null);
-  useIsoLayoutEffect(() => {
+  useGsapEffect(({ gsap }) => {
     const el = ref.current;
-    if (!el || prefersReducedMotion()) return;
-    const { gsap } = ensureGsap();
+    if (!el) return;
     const ctx = gsap.context(() => {
       el.querySelectorAll<HTMLElement>("[data-reveal]").forEach((node) => {
+        const rect = node.getBoundingClientRect();
+        // Skip hiding elements that are already in the initial viewport
+        if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) return;
         const kind = node.dataset["reveal"];
         const from: gsap.TweenVars =
           kind === "mask"
@@ -56,7 +128,6 @@ export function useReveal<T extends HTMLElement>(deps: unknown[] = []): RefObjec
       });
     }, el);
     return () => ctx.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
   return ref;
 }

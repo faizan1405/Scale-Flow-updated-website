@@ -18,9 +18,9 @@ export function Footer() {
   const ref = useReveal<HTMLElement>();
   const digits = settings.whatsapp.replace(/\D/g, "");
   const display = "+" + digits.replace(/^(\d{2})(\d{5})(\d+)$/, "$1 $2 $3");
-  const email = settings.email || "contact@joinscaleflow.com";
+  const email = settings.email || "business@joinscaleflow.in";
   return (
-    <footer ref={ref} className="relative overflow-hidden bg-navy px-6 pb-28 pt-20 text-ivory md:px-12 md:pb-10 md:pt-28">
+    <footer ref={ref} className="cv-auto relative overflow-hidden bg-navy px-6 pb-28 pt-20 text-ivory md:px-12 md:pb-10 md:pt-28">
       <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[70vw] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px]" />
       <div className="relative mx-auto max-w-7xl">
         {/* Closing call to action */}
@@ -70,9 +70,16 @@ export function Footer() {
         </div>
 
         {/* Wordmark */}
-        <p aria-hidden data-reveal="mask" className="font-display select-none whitespace-nowrap text-center text-[clamp(3.5rem,15vw,13rem)] leading-[0.8] text-ivory/[0.07]">
-          Scale Flow
-        </p>
+        <svg
+          aria-hidden="true"
+          data-reveal="mask"
+          viewBox="0 0 1000 155"
+          className="w-full select-none fill-ivory/[0.07] font-display"
+        >
+          <text x="50%" y="130" textAnchor="middle" fontSize="165" letterSpacing="-5">
+            Scale Flow
+          </text>
+        </svg>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-ivory/10 pt-6 text-xs text-grey">
           <span>© {new Date().getFullYear()} {settings.brandName}. All rights reserved.</span>

@@ -90,7 +90,7 @@ describe("quotation PDF data", () => {
     const p = pkg("basic")!;
     const q = calculateQuote(p, seed.features, []);
     const doc = buildQuotation(p, q, { name: "Faizan", business: "ScaleFlow", phone: "+91 9999999999", businessType: "Digital", description: "", timeline: "", referenceUrl: "", goals: [] }, date);
-    const blob = renderQuotationPdf(doc, { email: "contact@joinscaleflow.com", phone: "+91 98737 21207", office: "New Delhi" });
+    const blob = renderQuotationPdf(doc, { email: "business@joinscaleflow.in", phone: "+91 98737 21207", office: "New Delhi" });
     expect(blob).toBeInstanceOf(Blob);
     expect(blob.size).toBeGreaterThan(10000);
   });

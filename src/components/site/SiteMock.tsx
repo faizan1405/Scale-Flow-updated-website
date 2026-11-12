@@ -13,6 +13,8 @@ export function SiteMock({
   className,
   chrome = true,
   priority = false,
+  eager = false,
+  sizes,
 }: {
   project: Project;
   variant?: "desktop" | "mobile";
@@ -20,11 +22,16 @@ export function SiteMock({
   className?: string | undefined;
   chrome?: boolean;
   priority?: boolean;
+  eager?: boolean;
+  sizes?: string;
 }) {
   const [failed, setFailed] = useState(false);
   const src = image ?? (variant === "desktop" ? project.coverImage : project.mobileScreenshots[0]);
   const { bg, surface, fg } = project.palette;
   const mobile = variant === "mobile";
+  const hasResponsiveWebp = Boolean(src && src.startsWith("/__l5e/assets-v1/") && src.endsWith(".jpg"));
+  const webpBase = hasResponsiveWebp && src ? src.slice(0, -4) : null;
+  const computedSizes = sizes ?? (mobile ? "(max-width: 768px) 160px, 260px" : "(max-width: 768px) 360px, 640px");
 
   return (
     <div className={cn("relative overflow-hidden", mobile ? "aspect-[9/19]" : "aspect-[16/10]", className)} style={{ background: bg, color: fg }}>
@@ -37,15 +44,30 @@ export function SiteMock({
         </div>
       )}
       {src && !failed ? (
-        <img
-          src={src}
-          alt={`${project.title} ${variant} screenshot`}
-          loading={priority ? "eager" : "lazy"}
-          fetchPriority={priority ? "high" : "auto"}
-          decoding="async"
-          onError={() => setFailed(true)}
-          className={cn("absolute inset-0 h-full w-full object-cover object-top transition-[object-position] duration-[2.4s] ease-out motion-reduce:transition-none", !mobile && "group-hover:object-[50%_35%]", chrome && !mobile && "top-[6%] h-[94%]")}
-        />
+        <picture className="contents">
+          {webpBase && (
+            <source
+              type="image/webp"
+              srcSet={
+                mobile
+                  ? `${webpBase}-sm.webp 300w, ${webpBase}.webp 600w`
+                  : `${webpBase}-sm.webp 640w, ${webpBase}.webp 1280w`
+              }
+              sizes={computedSizes}
+            />
+          )}
+          <img
+            src={src}
+            alt={`${project.title} ${variant} screenshot`}
+            width={mobile ? 600 : 1280}
+            height={mobile ? 1300 : 800}
+            loading={priority || eager ? "eager" : "lazy"}
+            {...(priority ? { fetchPriority: "high" as const } : {})}
+            decoding={priority ? "sync" : "async"}
+            onError={() => setFailed(true)}
+            className={cn("absolute inset-0 h-full w-full object-cover object-top transition-[object-position] duration-[2.4s] ease-out motion-reduce:transition-none", !mobile && "group-hover:object-[50%_35%]", chrome && !mobile && "top-[6%] h-[94%]")}
+          />
+        </picture>
       ) : (
         <div className={cn("absolute inset-0 flex flex-col", chrome && !mobile && "top-[6%]")} style={{ containerType: "inline-size" }}>
           <MockBody project={project} mobile={mobile} />

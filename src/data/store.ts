@@ -2,8 +2,6 @@ import { useSyncExternalStore } from "react";
 import { seed } from "./seed";
 import type { DB } from "./types";
 import { acceptTheirs, mergeConflicts, mergeDB, type Conflict } from "./merge";
-import baseV1 from "./legacy/base-v1.json";
-import baseV2 from "./legacy/base-v2.json";
 
 /**
  * Demo repository. Persists to this browser's localStorage only.
@@ -16,12 +14,8 @@ import baseV2 from "./legacy/base-v2.json";
  */
 const KEY = "scaleflow-content";
 const BACKUP_INDEX = "scaleflow-backups";
-/** Earlier storage keys, oldest first, with the defaults each was created from. */
-const LEGACY: { key: string; base: DB }[] = [
-  { key: "scaleflow-demo-v1", base: baseV1 as unknown as DB },
-  { key: "scaleflow-demo-v2", base: baseV2 as unknown as DB },
-  { key: "scaleflow-demo-v3", base: seed },
-];
+/** Earlier storage keys, oldest first. */
+const LEGACY_KEYS = ["scaleflow-demo-v1", "scaleflow-demo-v2", "scaleflow-demo-v3"] as const;
 
 interface Envelope {
   format: 1;
@@ -73,7 +67,7 @@ function readBackups(): BackupEntry[] {
 /** Copy the raw saved data (all known keys) into a new backup key. Never deletes anything. */
 function backup(reason: string): boolean {
   const raw: Record<string, string> = {};
-  for (const k of [...LEGACY.map((l) => l.key), KEY]) {
+  for (const k of [...LEGACY_KEYS, KEY]) {
     const v = read(k);
     if (v !== null) raw[k] = v;
   }
@@ -130,15 +124,14 @@ function load() {
       let db: DB = seed;
       let conflicts: Conflict[] = [];
       const recovered: string[] = [];
-      for (const l of LEGACY) {
-        const v = read(l.key);
-        if (!v) continue;
+      const v3 = read("scaleflow-demo-v3");
+      if (v3) {
         try {
-          const saved = JSON.parse(v) as Partial<DB>;
-          const r = mergeDB(l.base, saved, db, `Recovered from ${l.key}`);
+          const saved = JSON.parse(v3) as Partial<DB>;
+          const r = mergeDB(seed, saved, db, "Recovered from scaleflow-demo-v3");
           db = r.db;
           conflicts = mergeConflicts(conflicts, r.conflicts);
-          recovered.push(l.key);
+          recovered.push("scaleflow-demo-v3");
         } catch {
           /* unreadable legacy copy — left in place, skipped */
         }
@@ -146,6 +139,37 @@ function load() {
       envelope = { format: 1, base: seed, data: db, conflicts, recovered, migratedAt: new Date().toISOString() };
       if (recovered.length) {
         if (backup("before recovering earlier admin edits")) persist();
+      }
+      if (read("scaleflow-demo-v1") || read("scaleflow-demo-v2")) {
+        void Promise.all([import("./legacy/base-v1.json"), import("./legacy/base-v2.json")]).then(([m1, m2]) => {
+          const legacyList: { key: string; base: DB }[] = [
+            { key: "scaleflow-demo-v1", base: m1.default as unknown as DB },
+            { key: "scaleflow-demo-v2", base: m2.default as unknown as DB },
+          ];
+          let nextDb = envelope?.data ?? seed;
+          let nextConflicts = envelope?.conflicts ?? [];
+          const nextRecovered = [...(envelope?.recovered ?? [])];
+          for (const l of legacyList) {
+            const v = read(l.key);
+            if (!v || nextRecovered.includes(l.key)) continue;
+            try {
+              const saved = JSON.parse(v) as Partial<DB>;
+              const r = mergeDB(l.base, saved, nextDb, `Recovered from ${l.key}`);
+              nextDb = r.db;
+              nextConflicts = mergeConflicts(nextConflicts, r.conflicts);
+              nextRecovered.push(l.key);
+            } catch {
+              /* unreadable legacy copy */
+            }
+          }
+          if (nextRecovered.length > (envelope?.recovered.length ?? 0)) {
+            envelope = { format: 1, base: seed, data: nextDb, conflicts: nextConflicts, recovered: nextRecovered, migratedAt: new Date().toISOString() };
+            state = nextDb;
+            if (backup("before recovering earlier admin edits")) persist();
+            syncMeta();
+            listeners.forEach((fn) => fn());
+          }
+        });
       }
     }
     if (envelope && !envelope.data.categories.some((c) => c.slug === "descriptive" || c.id === "c-descriptive")) {

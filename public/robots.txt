@@ -1,4 +1,4 @@
-# https://joinscaleflow.in robots.txt
+# https://www.joinscaleflow.in robots.txt
 # Optimized for Google, Bing, and Generative AI Search Engines (ChatGPT, Gemini, Perplexity, Claude)
 
 User-agent: Googlebot
@@ -46,4 +46,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/*
 
-Sitemap: https://joinscaleflow.in/sitemap.xml
+Sitemap: https://www.joinscaleflow.in/sitemap.xml

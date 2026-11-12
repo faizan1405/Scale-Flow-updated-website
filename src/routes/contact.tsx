@@ -27,18 +27,18 @@ export const Route = createFileRoute("/contact")({
         content:
           "Visit our Delhi studio in Connaught Place or chat on WhatsApp. Transparent pricing in INR and instant estimates.",
       },
-      { property: "og:url", content: "https://joinscaleflow.in/contact" },
+      { property: "og:url", content: "https://www.joinscaleflow.in/contact" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Contact Scale Flow | Website Maker in Delhi" },
       {
         name: "twitter:description",
         content: "Bespoke websites and digital experiences built in New Delhi, India.",
       },
-      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
-    links: [{ rel: "canonical", href: "https://joinscaleflow.in/contact" }],
+    links: [{ rel: "canonical", href: "https://www.joinscaleflow.in/contact" }],
   }),
   component: Contact,
 });
@@ -48,7 +48,7 @@ function Contact() {
   const ref = useReveal<HTMLElement>();
   const digits = settings.whatsapp.replace(/\D/g, "");
   const display = "+" + digits.replace(/^(\d{2})(\d{5})(\d+)$/, "$1 $2 $3");
-  const email = settings.email || "contact@joinscaleflow.com";
+  const email = settings.email || "business@joinscaleflow.in";
 
   const breadcrumbs = [
     { name: "Home", path: "/" },

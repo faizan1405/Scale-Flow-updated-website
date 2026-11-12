@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, CheckCircle2, ChevronDown, MapPin, Play, Sparkles, Zap } from "lucide-react";
 import { byOrder, useDB } from "@/data/store";
 import { kindLabel } from "@/data/portfolio-utils";
@@ -10,7 +10,7 @@ import { Words } from "@/components/site/Words";
 import { SlideLabel, btnGhost, btnLarge, btnLargeGhost, btnPrimary } from "@/components/site/Magnetic";
 import { VideoModal } from "@/components/site/VideoModal";
 import { WhatsAppIcon, WhatsAppLink } from "@/components/site/WhatsApp";
-import { ensureGsap, prefersReducedMotion, useIsoLayoutEffect, useReveal } from "@/lib/motion";
+import { useGsapEffect, useReveal } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { HOMEPAGE_FAQS, HOMEPAGE_FAQ_SCHEMA } from "@/lib/seo-schema";
 
@@ -34,9 +34,9 @@ export const Route = createFileRoute("/")({
         content:
           "Scale Flow is the premier website maker and web developer in Delhi. High-performance bespoke websites, 3D interactive experiences & online stores for startups & businesses. Instant pricing in INR.",
       },
-      { property: "og:url", content: "https://joinscaleflow.in/" },
+      { property: "og:url", content: "https://www.joinscaleflow.in/" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { property: "og:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Best Website Maker in Delhi | Web Developer Delhi — Scale Flow" },
       {
@@ -44,15 +44,10 @@ export const Route = createFileRoute("/")({
         content:
           "Bespoke websites & 3D digital experiences for ambitious startups & businesses. Based in Connaught Place, New Delhi. Instant estimates on WhatsApp.",
       },
-      { name: "twitter:image", content: "https://joinscaleflow.in/brand/scaleflow-social-card.png" },
+      { name: "twitter:image", content: "https://www.joinscaleflow.in/brand/scaleflow-social-card.png" },
     ],
     links: [
-      { rel: "canonical", href: "https://joinscaleflow.in/" },
-      {
-        rel: "preload",
-        as: "image",
-        href: "/__l5e/assets-v1/0c91e1ac-5a8b-4651-b576-d6e7c7364a1d/sf-bmw-d2.jpg",
-      },
+      { rel: "canonical", href: "https://www.joinscaleflow.in/" },
     ],
   }),
   component: Home,
@@ -84,30 +79,16 @@ function Home() {
 function Hero({ projects }: { projects: Project[] }) {
   const { settings } = useDB();
   const ref = useRef<HTMLElement>(null);
-  useIsoLayoutEffect(() => {
-    const el = ref.current;
-    if (!el || prefersReducedMotion()) return;
-    const { gsap } = ensureGsap();
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-      tl.fromTo("[data-hero-label]", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.9 }, 0.15)
-        .fromTo("h1 [data-word]", { yPercent: 115 }, { yPercent: 0, duration: 1.3, stagger: 0.06 }, 0.3)
-        .fromTo("[data-hero-sub]", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 }, 0.9)
-        .fromTo("[data-hero-cta]", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, stagger: 0.08 }, 1.05)
-        .fromTo("[data-hero-meta]", { opacity: 0 }, { opacity: 1, duration: 1, stagger: 0.1 }, 1.4);
-    }, el);
-    return () => ctx.revert();
-  }, []);
 
   return (
     <section ref={ref} className="surface-light relative overflow-hidden px-6 pb-16 pt-28 md:px-12 md:pb-24 md:pt-36" aria-labelledby="hero-title">
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-6">
           <p data-hero-label className="label-mono mb-8 flex items-center gap-3 text-gold">
-            <img src="/brand/scaleflow-mark-light.png" alt="" aria-hidden className="h-5 w-auto object-contain aspect-[5/3]" width="30" height="18" />
+            <img src="/brand/scaleflow-mark-light.png" alt="" aria-hidden loading="lazy" decoding="async" className="h-5 w-auto object-contain aspect-[5/3]" width="30" height="18" />
             <span className="h-px w-6 bg-gold/50" /> Scale Flow — Digital Showroom
           </p>
-          <Words as="h1" text={settings.heroHeadline} italicLast className="font-display block text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98]" />
+          <Words id="hero-title" as="h1" text={settings.heroHeadline} italicLast className="font-display block text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98]" />
           <p data-hero-sub className="mt-8 max-w-md text-base leading-relaxed text-ivory/70 md:text-lg">{settings.heroSub}</p>
           <div className="mt-10 flex flex-wrap gap-3">
               <Link data-hero-cta to="/work" className={btnPrimary}>
@@ -131,10 +112,9 @@ function Hero({ projects }: { projects: Project[] }) {
 /* 02 — INTRO */
 function Intro() {
   const ref = useReveal<HTMLElement>();
-  useIsoLayoutEffect(() => {
+  useGsapEffect(({ gsap }) => {
     const el = ref.current;
-    if (!el || prefersReducedMotion()) return;
-    const { gsap } = ensureGsap();
+    if (!el) return;
     const ctx = gsap.context(() => {
       gsap.fromTo("[data-scrub-word]", { opacity: 0.65 }, { opacity: 1, stagger: 0.1, ease: "none", scrollTrigger: { trigger: el, start: "top 80%", end: "top 30%", scrub: true } });
     }, el);
@@ -170,7 +150,7 @@ function SelectedWork({ projects }: { projects: Project[] }) {
   const kinds = ["tilt", "scale", "mask"] as const;
   const [lit, setLit] = useState(0);
   // Track which project is centred in view so the ambient light can follow it.
-  useIsoLayoutEffect(() => {
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -183,7 +163,7 @@ function SelectedWork({ projects }: { projects: Project[] }) {
   const glow = (p?: Project) => (p ? p.ambient ?? p.palette.accent : "transparent");
   const current = projects[lit];
   return (
-    <section ref={ref} className="relative px-6 pb-32 md:px-12" aria-labelledby="selected-title">
+    <section ref={ref} className="cv-auto relative px-6 pb-32 md:px-12" aria-labelledby="selected-title">
       {/* section-wide ambient light, eases to the active project's colour */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="sticky top-0 h-screen">
@@ -197,7 +177,7 @@ function SelectedWork({ projects }: { projects: Project[] }) {
         <div className="mb-20 flex flex-wrap items-end justify-between gap-6 border-b border-ivory/10 pb-8">
           <div>
             <p data-reveal className="label-mono mb-4 text-grey">(02) — Exhibition</p>
-            <Words as="h2" text="Selected Work" className="font-display block text-6xl md:text-8xl" />
+            <Words id="selected-title" as="h2" text="Selected Work" className="font-display block text-6xl md:text-8xl" />
           </div>
           <Link to="/work" className="link-underline label-mono text-gold">View all projects →</Link>
         </div>
@@ -224,7 +204,7 @@ function SelectedWork({ projects }: { projects: Project[] }) {
                   </span>
                 </Link>
                 <div className={cn("md:col-span-4", flip && "md:order-1 md:col-start-1 md:row-start-1")}>
-                  <p data-reveal className="font-mono text-6xl text-ivory/15 md:text-8xl">{String(i + 1).padStart(2, "0")}</p>
+                  <p data-reveal className="font-mono text-6xl text-ivory/60 md:text-8xl">{String(i + 1).padStart(2, "0")}</p>
                   <p data-reveal className="label-mono mt-4 text-gold">{cat?.name}</p>
                   <h3 data-reveal className="font-display mt-2 text-4xl md:text-5xl">{p.title}</h3>
                   <p data-reveal className="mt-4 text-ivory/65">{p.summary}</p>
@@ -264,14 +244,15 @@ function Capabilities({ projects }: { projects: Project[] }) {
   const [active, setActive] = useState(0);
   const ref = useReveal<HTMLElement>();
   const stage = useRef<HTMLDivElement>(null);
+  const first = useRef(true);
   const items = CAPS.map((c) => ({ ...c, list: c.ids.map((id) => projects.find((p) => p.id === id)).filter((p): p is Project => !!p) })).filter((c) => c.list.length);
   const cur = items[Math.min(active, items.length - 1)];
   const p = cur?.list[0];
 
-  useIsoLayoutEffect(() => {
+  useGsapEffect(({ gsap }) => {
+    if (first.current) return void (first.current = false);
     const el = stage.current;
-    if (!el || prefersReducedMotion()) return;
-    const { gsap } = ensureGsap();
+    if (!el) return;
     const ctx = gsap.context(() => {
       gsap.fromTo("[data-cap-shot]", { clipPath: "inset(0% 0% 100% 0%)", scale: 1.08 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 1.1, ease: "expo.out" });
       gsap.fromTo("[data-cap-text] > *", { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.9, ease: "expo.out", stagger: 0.06, delay: 0.15 });
@@ -281,12 +262,12 @@ function Capabilities({ projects }: { projects: Project[] }) {
 
   if (!cur || !p) return null;
   return (
-    <section ref={ref} className="surface-light section-pad" aria-labelledby="cap-title">
+    <section ref={ref} className="cv-auto surface-light section-pad" aria-labelledby="cap-title">
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6 md:mb-20">
           <div>
             <p data-reveal className="label-mono mb-4 text-grey">(03) — Capabilities</p>
-            <Words as="h2" text="What We Create" className="font-display block text-5xl md:text-7xl" />
+            <Words id="cap-title" as="h2" text="What We Create" className="font-display block text-5xl md:text-7xl" />
           </div>
           <p data-reveal className="max-w-sm text-ivory/60">Hover or tap a capability to see a live website from our portfolio built for it.</p>
         </div>
@@ -345,7 +326,7 @@ function Capabilities({ projects }: { projects: Project[] }) {
 function DelhiAuthority() {
   const ref = useReveal<HTMLElement>();
   return (
-    <section ref={ref} className="relative px-6 py-24 md:px-12 md:py-32" aria-labelledby="delhi-title">
+    <section ref={ref} className="cv-auto relative px-6 py-24 md:px-12 md:py-32" aria-labelledby="delhi-title">
       <div className="mx-auto max-w-7xl">
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-6">
@@ -353,6 +334,7 @@ function DelhiAuthority() {
               <MapPin className="h-4 w-4" /> Connaught Place, New Delhi · Serving Startups Across India
             </p>
             <Words
+              id="delhi-title"
               as="h2"
               text="Delhi's Premier Website Maker & Web Developer."
               italicLast
@@ -361,16 +343,16 @@ function DelhiAuthority() {
             <p data-reveal className="mt-6 text-base leading-relaxed text-ivory/70 md:text-lg">
               Ambitious brands don't settle for bloated WordPress templates or sluggish generic site builders.
               Scale Flow is an independent digital studio in New Delhi engineering bespoke, high-performance web
-              applications with custom React code, buttery 60fps GSAP motion, and sub-1 second loading speeds.
+              applications with custom React code, buttery 60fps GSAP motion, and responsive Core Web Vitals optimization.
             </p>
             <div data-reveal className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-ivory/10 bg-card/60 p-5 backdrop-blur">
                 <div className="flex items-center gap-3 text-gold">
                   <Zap className="h-5 w-5" />
-                  <span className="font-display text-xl text-ivory">100/100 Speed</span>
+                  <span className="font-display text-xl text-ivory">Performance-First Code</span>
                 </div>
                 <p className="mt-2 text-sm text-ivory/60">
-                  Certified Lighthouse performance. Ultra-fast Core Web Vitals maximize your Google organic rankings.
+                  Engineered with semantic HTML, optimized WebP assets, and clean Core Web Vitals for fast mobile and desktop loading.
                 </p>
               </div>
               <div className="rounded-xl border border-ivory/10 bg-card/60 p-5 backdrop-blur">
@@ -437,16 +419,16 @@ function DelhiAuthority() {
 function Showroom({ projects, showreel }: { projects: Project[]; showreel: string }) {
   const [open, setOpen] = useState(false);
   const ref = useReveal<HTMLElement>();
-  const shots = projects.filter((p) => p.coverImage);
+  const shots = projects.filter((p) => p.coverImage).slice(0, 8);
   if (shots.length < 4) return null;
   const half = Math.ceil(shots.length / 2);
   const rows = [shots.slice(0, half), shots.slice(half)];
   return (
-    <section ref={ref} className="relative overflow-hidden py-28 md:py-40" aria-labelledby="motion-title">
+    <section ref={ref} className="cv-auto relative overflow-hidden py-28 md:py-40" aria-labelledby="motion-title">
       <div className="mx-auto mb-14 flex max-w-7xl flex-wrap items-end justify-between gap-6 px-6 md:px-12">
         <div>
           <p data-reveal className="label-mono mb-4 text-grey">(04) — The showroom in motion</p>
-          <Words as="h2" text="Every Frame Is Live Work." italicLast className="font-display block max-w-3xl text-5xl md:text-7xl" />
+          <Words id="motion-title" as="h2" text="Every Frame Is Live Work." italicLast className="font-display block max-w-3xl text-5xl md:text-7xl" />
         </div>
         <div data-reveal className="flex flex-wrap gap-3">
           {showreel && (
@@ -480,11 +462,12 @@ function Showroom({ projects, showreel }: { projects: Project[]; showreel: strin
 function FaqSection() {
   const ref = useReveal<HTMLElement>();
   return (
-    <section ref={ref} className="surface-light px-6 py-24 md:px-12 md:py-32" aria-labelledby="faq-title">
+    <section ref={ref} className="cv-auto surface-light px-6 py-24 md:px-12 md:py-32" aria-labelledby="faq-title">
       <div className="mx-auto max-w-4xl">
         <div className="text-center">
           <p data-reveal className="label-mono mb-4 text-gold">(05) — Clarity & Answers</p>
           <Words
+            id="faq-title"
             as="h2"
             text="Frequently Asked Questions."
             italicLast
@@ -535,17 +518,17 @@ function FinalCta() {
   const ref = useReveal<HTMLElement>();
   return (
     <>
-      <section aria-hidden="true" role="presentation" className="overflow-hidden border-y border-ivory/10 py-6 md:py-8 select-none">
+      <section aria-hidden="true" role="presentation" className="cv-auto overflow-hidden border-y border-ivory/10 py-6 md:py-8 select-none">
         <div className="space-y-1 whitespace-nowrap" aria-hidden="true">
           <div aria-hidden="true" className="font-display block w-max text-[clamp(3rem,8.5vw,8.5rem)] leading-[1.05] text-ivory/50 [animation:marquee_70s_linear_infinite]">Scale Flow · Experience it · Scale Flow · Experience it · </div>
           <div aria-hidden="true" className="font-display block w-max text-[clamp(3rem,8.5vw,8.5rem)] leading-[1.05] text-ivory/50 [animation:marquee-rev_90s_linear_infinite]">Scale Flow · Experience it · Scale Flow · Experience it · </div>
         </div>
       </section>
-      <section ref={ref} className="surface-light relative overflow-hidden px-6 py-24 md:px-12 md:py-32" aria-labelledby="cta-title">
+      <section ref={ref} className="cv-auto surface-light relative overflow-hidden px-6 py-24 md:px-12 md:py-32" aria-labelledby="cta-title">
         <div className="mx-auto grid max-w-7xl items-end gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <p data-reveal className="label-mono mb-6 flex items-center gap-3 text-gold"><span className="h-px w-10 bg-gold" /> Start a project</p>
-            <Words as="h2" text="Let's Build Something Exceptional." italicLast className="font-display block text-[clamp(2.75rem,6.4vw,6.25rem)] leading-[0.95]" />
+            <Words id="cta-title" as="h2" text="Let's Build Something Exceptional." italicLast className="font-display block text-[clamp(2.75rem,6.4vw,6.25rem)] leading-[0.95]" />
           </div>
           <div className="lg:col-span-5 lg:pb-3">
             <p data-reveal className="max-w-md text-lg leading-relaxed text-ivory/65 md:text-xl">Tell us what your business needs. We'll shape the right digital experience around your goals.</p>
