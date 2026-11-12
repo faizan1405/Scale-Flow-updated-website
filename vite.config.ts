@@ -2,7 +2,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   nitro: {
-    preset: process.env["NITRO_PRESET"] || "vercel",
+    preset: process.env["NITRO_PRESET"] || (process.env.VERCEL ? "vercel" : "node-server"),
     compressPublicAssets: true,
     routeRules: {
       "/assets/**": { headers: { "cache-control": "public, max-age=31536000, immutable" } },
