@@ -104,8 +104,8 @@ export const AGENCY_SCHEMA = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Startup Website Maker Package",
-          description: "Fast-loading, high-converting digital storefront designed for Indian startups and entrepreneurs.",
+          name: "Startup & Basic Website Package",
+          description: "Fast-loading, high-converting digital presence designed for startups and businesses.",
         },
         price: "15000",
         priceCurrency: "INR",
@@ -114,20 +114,10 @@ export const AGENCY_SCHEMA = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Business Website Development in Delhi",
-          description: "Multi-page bespoke website engineered to drive qualified customer inquiries via WhatsApp and forms.",
+          name: "Business Pro & Portfolio Website",
+          description: "Multi-page website engineered to showcase work and drive qualified customer inquiries via WhatsApp and forms.",
         },
-        price: "30000",
-        priceCurrency: "INR",
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Premium 3D & Interactive Web Experiences",
-          description: "Art-directed bespoke design with real-time 3D, WebGL, smooth GSAP motion, and high-end brand perception.",
-        },
-        price: "45000",
+        price: "15000",
         priceCurrency: "INR",
       },
       {
@@ -137,6 +127,17 @@ export const AGENCY_SCHEMA = {
           name: "E-Commerce Website Development",
           description: "Custom online storefronts with Indian payment gateway integrations (Razorpay/Stripe), product catalog, and WhatsApp order flow.",
         },
+        price: "30000",
+        priceCurrency: "INR",
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "3D Interactive Web Experiences",
+          description: "Art-directed bespoke design with real-time 3D, WebGL, smooth GSAP motion, and high-end brand perception.",
+        },
+        price: "40000",
         priceCurrency: "INR",
       },
     ],
@@ -187,7 +188,7 @@ export const HOMEPAGE_FAQS = [
   {
     question: "How much does a professional website maker in Delhi charge?",
     answer:
-      "At Scale Flow, website development pricing is completely transparent in INR (₹) with zero hidden fees. Single-page starter business sites begin at ₹15,000, multi-page business websites built to generate client inquiries start at ₹30,000, and bespoke 3D interactive or e-commerce experiences range from ₹45,000 to ₹1,50,000+. Instant estimates can be calculated in minutes using our online website cost calculator.",
+      "At Scale Flow, website development pricing is completely transparent in INR (₹) with zero hidden fees. The basic website, the business pro, or the portfolio website starts from ₹15,000. An e-commerce website starts from ₹30,000. A 3D website starts from ₹40,000. For custom code or a custom website, you can talk to us on WhatsApp and tell us your requirements.",
   },
   {
     question: "Why choose Scale Flow over traditional web design agencies in Delhi?",

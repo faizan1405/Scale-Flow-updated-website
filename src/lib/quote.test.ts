@@ -5,24 +5,24 @@ import { buildQuoteMessage, calculateQuote, whatsappLink } from "./quote";
 const pkg = (id: string) => seed.packages.find((p) => p.id === id);
 
 describe("quotation builder", () => {
-  it("Business package (₹30,000) plus booking (₹7,000) and payments (₹5,000) totals ₹42,000", () => {
+  it("Business Pro package (₹15,000) plus booking (₹7,000) and payments (₹5,000) totals ₹27,000", () => {
     const q = calculateQuote(pkg("business"), seed.features, ["booking", "payments"]);
-    expect(q.total).toBe(42000);
+    expect(q.total).toBe(27000);
   });
 
   it("does not charge for features already included in the package", () => {
-    const q = calculateQuote(pkg("premium"), seed.features, ["admin", "blog"]);
-    expect(q.total).toBe(45000);
+    const q = calculateQuote(pkg("ecommerce"), seed.features, ["products", "whatsapp"]);
+    expect(q.total).toBe(30000);
   });
 
   it("custom-priced packages show no total", () => {
-    const q = calculateQuote(pkg("ecommerce"), seed.features, []);
+    const q = calculateQuote(pkg("app"), seed.features, []);
     expect(q.total).toBeNull();
     expect(q.isCustom).toBe(true);
   });
 
   it("selecting a custom-priced add-on removes the fixed total", () => {
-    const q = calculateQuote(pkg("premium"), seed.features, ["three"]);
+    const q = calculateQuote(pkg("business"), seed.features, ["dashboard"]);
     expect(q.total).toBeNull();
   });
 
@@ -43,7 +43,7 @@ describe("quotation builder", () => {
   it("no optional add-on is charged until the visitor selects it", () => {
     const q = calculateQuote(pkg("business"), seed.features, []);
     expect(q.addons).toHaveLength(0);
-    expect(q.total).toBe(30000);
+    expect(q.total).toBe(15000);
   });
 });
 
@@ -78,7 +78,7 @@ describe("quotation PDF data", () => {
   });
   it("WhatsApp and PDF use the same words for custom-priced quotes", async () => {
     const { buildQuotation, calculateQuote } = await import("./quote");
-    const p = pkg("ecommerce");
+    const p = pkg("app");
     const q = calculateQuote(p, seed.features, []);
     const d = { name: "R", business: "", phone: "9", businessType: "", description: "", timeline: "", referenceUrl: "", goals: [] };
     expect(buildQuoteMessage(p, q, d)).toContain("Estimated Budget: Price to be confirmed");

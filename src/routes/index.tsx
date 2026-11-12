@@ -381,7 +381,7 @@ function DelhiAuthority() {
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 shrink-0 text-gold mt-0.5" />
                   <div>
-                    <strong className="text-ivory">Transparent Pricing in INR:</strong> Single-page starter sites from ₹15,000, multi-page business websites from ₹30,000. No surprise charges.
+                    <strong className="text-ivory">Transparent Pricing in INR:</strong> Basic, Business Pro, or Portfolio website from ₹15,000; E-commerce from ₹30,000; and 3D websites from ₹40,000. Custom code & custom websites available via WhatsApp.
                   </div>
                 </li>
                 <li className="flex items-start gap-3">

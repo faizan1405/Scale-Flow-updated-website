@@ -81,19 +81,11 @@ export function Chatbot() {
 
     // 1. Pricing & Packages
     if (q.includes("price") || q.includes("cost") || q.includes("pack") || q.includes("charge") || q.includes("rate") || q.includes("how much") || q.includes("budget") || q.includes("pricing")) {
-      const basicPkg = packages.find((p) => p.id === "basic");
-      const bizPkg = packages.find((p) => p.id === "business");
-      const premPkg = packages.find((p) => p.id === "premium");
-
-      const basicPrice = basicPkg?.price ? `₹${basicPkg.price.toLocaleString("en-IN")}` : "₹15,000";
-      const bizPrice = bizPkg?.price ? `₹${bizPkg.price.toLocaleString("en-IN")}` : "₹30,000";
-      const premPrice = premPkg?.price ? `₹${premPkg.price.toLocaleString("en-IN")}` : "₹45,000";
-
       return {
-        text: `Here is our transparent pricing structure:\n\n• Basic Website: from ${basicPrice} (Fast presence with WhatsApp integration)\n• Business Website: from ${bizPrice} (Multi-page, lead generation & inquiry forms)\n• Premium Brand: from ${premPrice} (Art-directed motion, custom animations & CMS)\n• 3D Interactive & E-Commerce: Custom tailored quotes.\n\nYou can also calculate an instant custom estimate with our online tool!`,
+        text: `Here is our transparent pricing across the website:\n\n• Basic Website, Business Pro, or Portfolio Website: starts from ₹15,000\n• E-commerce Website: starts from ₹30,000\n• 3D Interactive Website: starts from ₹40,000\n• Custom Code / Custom Website: You can talk to us on WhatsApp and share your requirements.\n\nAll pricing is transparent with zero hidden fees. You can also calculate your custom estimate in our online quotation tool!`,
         actions: [
           { label: "Calculate Instant Quotation", href: "/build-your-website" },
-          { label: "Discuss Your Budget on WhatsApp", isWhatsApp: true, prefill: "Hi Scale Flow, I'd like to get a quote for a website." },
+          { label: "Talk to Us on WhatsApp", isWhatsApp: true, prefill: "Hi Scale Flow, I want to discuss a website project and get a quote." },
         ],
       };
     }

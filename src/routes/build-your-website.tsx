@@ -17,7 +17,7 @@ export const Route = createFileRoute("/build-your-website")({
   head: () => ({
     meta: [
       { title: "Website Cost Calculator India | Instant Website Price Estimate in ₹ — Scale Flow" },
-      { name: "description", content: "Calculate your custom website design & development cost in India instantly. Transparent pricing in INR (₹) starting from ₹15,000. Choose features, calculate price, and get an instant proposal on WhatsApp." },
+      { name: "description", content: "Calculate your custom website design & development cost in India instantly. Transparent pricing in INR (₹): Basic, Business Pro & Portfolio from ₹15,000, E-commerce from ₹30,000, 3D websites from ₹40,000, and custom websites on WhatsApp." },
       { name: "keywords", content: "website cost calculator india, website design cost in india, how much does a website cost in india, website price calculator inr, instant website quotation online, web development price list india, startup website cost india" },
       { property: "og:title", content: "Website Cost Calculator India | Instant Website Estimate in ₹" },
       { property: "og:description", content: "Transparent website pricing for Indian businesses and startups. Calculate custom estimate in minutes and connect on WhatsApp." },
@@ -476,11 +476,11 @@ function Builder() {
 const ESTIMATOR_FAQS = [
   {
     question: "How much does website development cost in India?",
-    answer: "Website development cost in India typically ranges from ₹15,000 for standard business starter websites, ₹30,000 for multi-page lead generation websites, up to ₹45,000 to ₹1,50,000+ for custom animated brand platforms, 3D interactive experiences, and full-featured e-commerce stores. Scale Flow provides upfront transparent pricing in INR.",
+    answer: "Website development cost at Scale Flow is completely transparent: The Basic website, Business Pro, or Portfolio website starts from ₹15,000. An E-commerce website starts from ₹30,000. A 3D website starts from ₹40,000. For custom code or a custom website, talk to us on WhatsApp and tell us your requirements.",
   },
   {
     question: "How does the Scale Flow instant website cost calculator work?",
-    answer: "Select your project type (Basic, Business, Premium, E-commerce, or 3D Interactive), define your business goals, and pick only the functionality you need (such as admin panels, payment gateways, booking systems, or animations). You instantly get an itemized estimate in INR that you can download as a PDF or send directly to WhatsApp for a quick consultation.",
+    answer: "Select your project type (Basic, Business Pro, Portfolio, E-commerce, 3D Interactive, or Custom Code), define your goals, and pick any add-on functionality you need. You instantly get an itemized estimate in INR that you can download as a PDF or send directly to WhatsApp for a quick consultation.",
   },
   {
     question: "How long does it take to design and build a website?",
