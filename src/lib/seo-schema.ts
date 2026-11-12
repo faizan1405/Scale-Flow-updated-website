@@ -21,7 +21,7 @@ export const AGENCY_SCHEMA = {
   ],
   slogan: "Experience It — India's Premier Custom Website Maker",
   url: BASE_URL,
-  logo: `${BASE_URL}/brand/scaleflow-social-card.png`,
+  logo: `${BASE_URL}/brand/scaleflow-logo-light.png`,
   image: `${BASE_URL}/brand/scaleflow-social-card.png`,
   description:
     "Scale Flow is the premier website maker and web development studio in Delhi, India. We engineer high-performance bespoke websites, 3D interactive experiences, and e-commerce stores for ambitious startups and businesses with transparent INR pricing.",

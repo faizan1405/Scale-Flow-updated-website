@@ -85,7 +85,7 @@ function Hero({ projects }: { projects: Project[] }) {
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-6">
           <p data-hero-label className="label-mono mb-8 flex items-center gap-3 text-gold">
-            <img src="/brand/scaleflow-mark-light.png" alt="" aria-hidden loading="lazy" decoding="async" className="h-5 w-auto object-contain aspect-[5/3]" width="30" height="18" />
+            <img src="/brand/scaleflow-mark-light.png" alt="Scale Flow" loading="lazy" decoding="async" className="h-5 w-auto object-contain" width="30" height="18" />
             <span className="h-px w-6 bg-gold/50" /> Scale Flow — Digital Showroom
           </p>
           <Words id="hero-title" as="h1" text={settings.heroHeadline} italicLast className="font-display block text-[clamp(2.8rem,6.2vw,6rem)] leading-[0.98]" />
