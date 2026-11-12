@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import { Nav, Logo } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppFab } from "@/components/site/WhatsApp";
+import { Chatbot } from "@/components/site/Chatbot";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AGENCY_SCHEMA, WEBSITE_SCHEMA } from "../lib/seo-schema";
@@ -164,6 +165,7 @@ function RootComponent() {
       <Outlet />
       {!isAdmin && <Footer />}
       {!isAdmin && <WhatsAppFab />}
+      {!isAdmin && <Chatbot />}
     </>
   );
 }
