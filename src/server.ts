@@ -52,12 +52,15 @@ export default {
     const accept = request.headers.get("accept") ?? "";
 
     // Content negotiation for AI agents & LLM crawlers (e.g. ChatGPT, Claude, Gemini, is-agentic)
-    if (url.pathname === "/llms.txt" || (url.pathname === "/" && accept.includes("text/markdown"))) {
+    if (
+      url.pathname === "/llms.txt" ||
+      (url.pathname === "/" && accept.includes("text/markdown"))
+    ) {
       return new Response(llmsContent, {
         status: 200,
         headers: {
           "content-type": "text/markdown; charset=utf-8",
-          "vary": "Accept",
+          vary: "Accept",
           "cache-control": "public, max-age=3600, s-maxage=86400",
         },
       });
@@ -75,13 +78,23 @@ export default {
             status: 404,
             headers: {
               "content-type": "text/markdown; charset=utf-8",
-              "vary": "Accept",
+              vary: "Accept",
             },
           },
         );
       }
 
       let finalResponse = await normalizeCatastrophicSsrResponse(response);
+      if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) {
+        const adminHeaders = new Headers(finalResponse.headers);
+        adminHeaders.set("cache-control", "private, no-store, no-cache, must-revalidate");
+        adminHeaders.set("x-robots-tag", "noindex, nofollow");
+        finalResponse = new Response(finalResponse.body, {
+          status: finalResponse.status,
+          statusText: finalResponse.statusText,
+          headers: adminHeaders,
+        });
+      }
       const contentType = finalResponse.headers.get("content-type") ?? "";
       if (contentType.includes("text/html") && finalResponse.status === 200) {
         const html = await finalResponse.text();
@@ -93,7 +106,8 @@ export default {
         const inlinedHtml = html
           .replace(
             /<link rel="stylesheet" href="\/assets\/styles-[^"]+\.css"[^>]*\/?>/,
-            () => `${heroPreload}${fontPreloads}<style id="sf-inline-css" data-precedence="default">${appCssInline}</style>`,
+            () =>
+              `${heroPreload}${fontPreloads}<style id="sf-inline-css" data-precedence="default">${appCssInline}</style>`,
           )
           .replace(/<link rel="modulepreload" href="\/assets\/[^"]+"[^>]*\/?>/g, "")
           .replace(
@@ -114,7 +128,9 @@ export default {
         finalResponse.body &&
         !finalResponse.headers.get("content-encoding") &&
         acceptEncoding.includes("gzip") &&
-        (contentType.includes("text/html") || contentType.includes("application/json") || contentType.includes("text/markdown")) &&
+        (contentType.includes("text/html") ||
+          contentType.includes("application/json") ||
+          contentType.includes("text/markdown")) &&
         typeof CompressionStream !== "undefined"
       ) {
         const headers = new Headers(finalResponse.headers);

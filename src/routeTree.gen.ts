@@ -22,6 +22,7 @@ import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
 import { Route as AdminQuotationsRouteImport } from './routes/admin.quotations'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
 
@@ -90,6 +91,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin_/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkIndexRoute = WorkIndexRouteImport.update({
   id: '/work/',
   path: '/work/',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/quotations': typeof AdminQuotationsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/work/$slug': typeof WorkSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/work/': typeof WorkIndexRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/quotations': typeof AdminQuotationsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/work/$slug': typeof WorkSlugRoute
   '/admin': typeof AdminIndexRoute
   '/work': typeof WorkIndexRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/quotations': typeof AdminQuotationsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin_/login': typeof AdminLoginRoute
   '/work/$slug': typeof WorkSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/work/': typeof WorkIndexRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/admin/projects'
     | '/admin/quotations'
     | '/admin/settings'
+    | '/admin/login'
     | '/work/$slug'
     | '/admin/'
     | '/work/'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/admin/projects'
     | '/admin/quotations'
     | '/admin/settings'
+    | '/admin/login'
     | '/work/$slug'
     | '/admin'
     | '/work'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/admin/projects'
     | '/admin/quotations'
     | '/admin/settings'
+    | '/admin_/login'
     | '/work/$slug'
     | '/admin/'
     | '/work/'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   PrivacyRoute: typeof PrivacyRoute
   VideosRoute: typeof VideosRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   WorkSlugRoute: typeof WorkSlugRoute
   WorkIndexRoute: typeof WorkIndexRoute
 }
@@ -310,6 +323,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin_/login': {
+      id: '/admin_/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/work/': {
       id: '/work/'
       path: '/work'
@@ -355,6 +375,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   PrivacyRoute: PrivacyRoute,
   VideosRoute: VideosRoute,
+  AdminLoginRoute: AdminLoginRoute,
   WorkSlugRoute: WorkSlugRoute,
   WorkIndexRoute: WorkIndexRoute,
 }

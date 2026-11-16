@@ -37,6 +37,12 @@ in that original browser and save the JSON separately. This export intentionally
 does not read browser storage, credentials or private user data. A Hostinger
 import is not implemented yet; keep that JSON safe for the future migration.
 
+## Admin Panel Environment Variables
+`/admin` routes require authentication configured via server environment variables (or a `.env` file in the server root):
+- `ADMIN_EMAIL` — administrator login email
+- `ADMIN_PASSWORD` — administrator login password (or `ADMIN_PASSWORD_HASH` in `scrypt$<saltHex>$<hashHex>` format)
+- `ADMIN_SESSION_SECRET` — random 64-char hex secret used to sign the `HttpOnly` session cookie
+
 ## Excluded intentionally
 Git history, editor/workspace metadata, credentials, node_modules and generated
 build output. Dependencies are restored using package.json and bun.lock.

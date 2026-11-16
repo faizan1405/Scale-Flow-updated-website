@@ -22,4 +22,13 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("matches /admin and /admin/login routes", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    expect(router.matchRoutes("/admin").at(-1)?.routeId).toBe("/admin/");
+    const loginMatch = router.matchRoutes("/admin/login").at(-1);
+    expect(loginMatch?.routeId).toBe("/admin_/login");
+    expect(loginMatch?.pathname).toBe("/admin/login");
+  });
 });
