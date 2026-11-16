@@ -199,6 +199,10 @@ function load() {
       const threeDProjectIds = new Set(["pf-noctra", "pf-ironforge"]);
       let updatedProjects = false;
       envelope.data.projects = envelope.data.projects.map((p) => {
+        if (p.id === "pf-afforda" && p.liveUrl !== "https://afforda.joinscaleflow.in/") {
+          p = { ...p, liveUrl: "https://afforda.joinscaleflow.in/" };
+          updatedProjects = true;
+        }
         if (p.id === "pf-tourism" && p.liveUrl !== "https://silvercircletravel.com/") {
           p = { ...p, liveUrl: "https://silvercircletravel.com/" };
           updatedProjects = true;

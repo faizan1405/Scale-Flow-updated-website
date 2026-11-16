@@ -13,7 +13,7 @@ describe("imported portfolio", () => {
     const url = (s: string) => portfolio.find((p) => p.slug === s)?.liveUrl;
     expect(url("bmw-interactive-experience")).toBe("https://bmw.joinscaleflow.in/");
     expect(url("a-and-i-realty")).toBe("https://aireality.joinscaleflow.in/");
-    expect(url("afforda-technologies")).toBe("https://affordaindia.com/");
+    expect(url("afforda-technologies")).toBe("https://afforda.joinscaleflow.in/");
     expect(url("jsb-stonex-marble")).toBe("https://marble.joinscaleflow.in/");
   });
   it("features the six chosen projects", () => {
