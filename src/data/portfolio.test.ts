@@ -4,10 +4,10 @@ import { seed } from "./seed";
 import { inCategory, matchesQuery } from "./portfolio-utils";
 
 describe("imported portfolio", () => {
-  it("has exactly 27 unique projects", () => {
-    expect(portfolio).toHaveLength(27);
-    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(27);
-    expect(new Set(portfolio.map((p) => p.liveUrl)).size).toBe(27);
+  it("has exactly 28 unique projects", () => {
+    expect(portfolio).toHaveLength(28);
+    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(28);
+    expect(new Set(portfolio.map((p) => p.liveUrl)).size).toBe(28);
   });
   it("keeps the supplied live URLs", () => {
     const url = (s: string) => portfolio.find((p) => p.slug === s)?.liveUrl;
@@ -15,6 +15,7 @@ describe("imported portfolio", () => {
     expect(url("a-and-i-realty")).toBe("https://aireality.joinscaleflow.in/");
     expect(url("afforda-technologies")).toBe("https://afforda.joinscaleflow.in/");
     expect(url("jsb-stonex-marble")).toBe("https://marble.joinscaleflow.in/");
+    expect(url("forme-fine-jewelry")).toBe("https://jewelry.joinscaleflow.in/");
   });
   it("features the six chosen projects", () => {
     expect(portfolio.filter((p) => p.featured).map((p) => p.title)).toEqual([
@@ -106,6 +107,19 @@ describe("imported portfolio", () => {
     expect(marble?.tags).toContain("Scroll-based");
     expect(inCategory(marble!, "c-3d")).toBe(true);
     expect(inCategory(marble!, "c-realestate")).toBe(true);
+  });
+
+  it("includes FORME Fine Jewelry 3D gallery in 3D Interactive and E-commerce categories", () => {
+    const forme = portfolio.find((p) => p.slug === "forme-fine-jewelry");
+    expect(forme).toBeDefined();
+    expect(forme?.categoryId).toBe("c-3d");
+    expect(forme?.extraCategoryIds).toContain("c-ecommerce");
+    expect(forme?.liveUrl).toBe("https://jewelry.joinscaleflow.in/");
+    expect(forme?.coverImage).toBe("/projects/sf-forme-d.jpg");
+    expect(forme?.screenshots).toContain("/projects/sf-forme-d.jpg");
+    expect(forme?.mobileScreenshots).toContain("/projects/sf-forme-m.jpg");
+    expect(inCategory(forme!, "c-3d")).toBe(true);
+    expect(inCategory(forme!, "c-ecommerce")).toBe(true);
   });
 
   it("includes Noctra Mattress and Ironforge in 3D Interactive category while preserving their original categories", () => {

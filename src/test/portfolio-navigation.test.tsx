@@ -8,8 +8,8 @@ import type { Project } from "@/data/types";
 
 describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
   it("maintains all portfolio projects intact with valid live URLs", () => {
-    expect(portfolio).toHaveLength(27);
-    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(27);
+    expect(portfolio).toHaveLength(28);
+    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(28);
     expect(portfolio.every((p) => p.liveUrl && p.liveUrl.startsWith("https://"))).toBe(true);
   });
 
