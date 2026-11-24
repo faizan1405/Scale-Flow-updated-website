@@ -21,8 +21,8 @@ describe("non-destructive content merge", () => {
   it("merges defaults onto untouched old data, preserving existing projects and adding new defaults", () => {
     const base = baseV2 as unknown as DB;
     const { db } = mergeDB(base, clone(base), seed, "t");
-    expect(db.projects).toHaveLength(28);
-    expect(new Set(db.projects.map((p) => p.id)).size).toBe(28);
+    expect(db.projects).toHaveLength(29);
+    expect(new Set(db.projects.map((p) => p.id)).size).toBe(29);
     expect(db.projects.filter((p) => p.featured)).toHaveLength(6);
   });
 
@@ -57,7 +57,7 @@ describe("non-destructive content merge", () => {
     const theirs = clone(seed);
     theirs.projects.push({ ...clone(proj(seed, "pf-bmw")), id: "new-1", slug: "new" });
     const { db } = mergeDB(seed, mine, theirs, "t");
-    expect(db.projects).toHaveLength(30);
+    expect(db.projects).toHaveLength(31);
     expect(db.projects.filter((p) => p.id === "pf-bmw")).toHaveLength(1);
     expect(db.media.map((m) => m.id)).toEqual(["m1"]);
   });

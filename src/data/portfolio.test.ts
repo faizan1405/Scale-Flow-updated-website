@@ -4,10 +4,10 @@ import { seed } from "./seed";
 import { inCategory, matchesQuery } from "./portfolio-utils";
 
 describe("imported portfolio", () => {
-  it("has exactly 28 unique projects", () => {
-    expect(portfolio).toHaveLength(28);
-    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(28);
-    expect(new Set(portfolio.map((p) => p.liveUrl)).size).toBe(28);
+  it("has exactly 29 unique projects", () => {
+    expect(portfolio).toHaveLength(29);
+    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(29);
+    expect(new Set(portfolio.map((p) => p.liveUrl)).size).toBe(29);
   });
   it("keeps the supplied live URLs", () => {
     const url = (s: string) => portfolio.find((p) => p.slug === s)?.liveUrl;
@@ -16,6 +16,7 @@ describe("imported portfolio", () => {
     expect(url("afforda-technologies")).toBe("https://afforda.joinscaleflow.in/");
     expect(url("jsb-stonex-marble")).toBe("https://marble.joinscaleflow.in/");
     expect(url("forme-fine-jewelry")).toBe("https://jewelry.joinscaleflow.in/");
+    expect(url("seamless-socials")).toBe("https://seamlesssocials.in/");
   });
   it("features the six chosen projects", () => {
     expect(portfolio.filter((p) => p.featured).map((p) => p.title)).toEqual([
@@ -120,6 +121,19 @@ describe("imported portfolio", () => {
     expect(forme?.mobileScreenshots).toContain("/projects/sf-forme-m.jpg");
     expect(inCategory(forme!, "c-3d")).toBe(true);
     expect(inCategory(forme!, "c-ecommerce")).toBe(true);
+  });
+
+  it("includes Seamless Socials as a Descriptive project", () => {
+    const ss = portfolio.find((p) => p.slug === "seamless-socials");
+    expect(ss).toBeDefined();
+    expect(ss?.categoryId).toBe("c-descriptive");
+    expect(ss?.extraCategoryIds).toContain("c-business");
+    expect(ss?.liveUrl).toBe("https://seamlesssocials.in/");
+    expect(ss?.coverImage).toBe("/projects/sf-seamless-socials-d.jpg");
+    expect(ss?.screenshots).toContain("/projects/sf-seamless-socials-d.jpg");
+    expect(ss?.mobileScreenshots).toContain("/projects/sf-seamless-socials-m.jpg");
+    expect(inCategory(ss!, "c-descriptive")).toBe(true);
+    expect(inCategory(ss!, "c-business")).toBe(true);
   });
 
   it("includes Noctra Mattress and Ironforge in 3D Interactive category while preserving their original categories", () => {

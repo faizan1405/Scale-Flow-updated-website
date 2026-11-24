@@ -8,8 +8,8 @@ import type { Project } from "@/data/types";
 
 describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
   it("maintains all portfolio projects intact with valid live URLs", () => {
-    expect(portfolio).toHaveLength(28);
-    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(28);
+    expect(portfolio).toHaveLength(29);
+    expect(new Set(portfolio.map((p) => p.slug)).size).toBe(29);
     expect(portfolio.every((p) => p.liveUrl && p.liveUrl.startsWith("https://"))).toBe(true);
   });
 
@@ -24,12 +24,13 @@ describe("SCALE FLOW — Portfolio Navigation & Descriptive Category", () => {
   it("automatically assigns selected projects to Descriptive while preserving their original categories", () => {
     const descId = "c-descriptive";
     const assigned = portfolio.filter((p) => inCategory(p, descId));
-    expect(assigned).toHaveLength(7);
+    expect(assigned).toHaveLength(8);
     expect(assigned.map((p) => p.slug).sort()).toEqual([
       "afforda-technologies",
       "black-pearl-apparels",
       "ezymiles",
       "mainika",
+      "seamless-socials",
       "silver-circle-travel",
       "teen-and-tees",
       "yaarl-styles",

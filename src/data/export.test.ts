@@ -5,10 +5,10 @@ import { seed } from "./seed";
 const clone = <T,>(x: T): T => JSON.parse(JSON.stringify(x));
 
 describe("export validation", () => {
-  it("accepts the current content: 28 projects, 6 featured, 9 categories", () => {
+  it("accepts the current content: 29 projects, 6 featured, 9 categories", () => {
     const r = validateExport(buildExport(seed, []));
     expect(r.ok).toBe(true);
-    expect(r.counts.projects).toBe(28);
+    expect(r.counts.projects).toBe(29);
     expect(r.counts.featured).toBe(6);
     expect(r.counts.categories).toBe(9);
   });
